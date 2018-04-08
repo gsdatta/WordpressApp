@@ -23,7 +23,7 @@ export class WP {
     }
 
     posts(params) {
-        let url = `${this.url}/posts?`;
+        let url = `${this.url}/posts`;
         console.log(params);
         if (params) {
             urlParams = new URLSearchParams();
