@@ -36,13 +36,15 @@ export class WP {
         let url = `${this.url}/posts`;
         console.log(params);
         if (params) {
-            urlParams = new URLSearchParams();
+            let urlParams = new URLSearchParams();
             for (let p in params) {
                 urlParams.append(p, params[p]);
             }
             const queryString = urlParams.toString();
             url += `?${queryString}`;
         }
+
+        console.log(url);
 
         return this.getURL(url)
             .then(res => {

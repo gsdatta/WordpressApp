@@ -1,1 +1,1 @@
-export const WP_SERVER = 'https://swayampaaka.com/wp-json/wp/v2';
+export const WP_SERVER = 'https://foodandremedy.com/wp-json/wp/v2';

@@ -1,24 +1,16 @@
-import React, { Component } from 'react';
-import { WP_SERVER } from '../config';
-import { WP } from '../wordpress'
-import { PostListComponent } from '@components/Posts/index.js';
+import React from 'react';
+import {PostListComponent} from '../components';
 
 export class Posts extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            posts: [],
-        };
-    }
-
-    componentDidMount() {
-        new WP(WP_SERVER).posts(this.props.post_query).then(cat => {console.log(cat); return cat;}).then(cat => this.setState({posts: cat}));
     }
 
     render() {
-        const posts = this.state.posts;
+        const categoryId = this.props.categoryId;
+
         return (
-            <PostListComponent posts={posts}/>
+            <PostListComponent category={categoryId}/>
         );
     }
 }

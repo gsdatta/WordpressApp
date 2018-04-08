@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { ScrollView } from 'react-native';
-import { Text, List, ListItem } from 'native-base';
+import React from 'react';
+import {ScrollView} from 'react-native';
+import {List, ListItem, Text} from 'native-base';
 
 export class CategoriesComponent extends React.Component {
     constructor(props) {
@@ -12,23 +12,21 @@ export class CategoriesComponent extends React.Component {
         };
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({
-            categories: props.categories
-        });
+    static getDerivedStateFromProps(nextProps, prevState) {
+        return {
+            categories: nextProps.categories
+        };
     }
 
     render() {
         let categories = this.state.categories;
         console.log(categories);
-        
-        const goToPostList = ( category ) => this.props.navigator.push({
+
+        const goToPostList = (category) => this.props.navigator.push({
             screen: 'posts.List',
             passProps: {
                 navigation: this.props.navigator,
-                post_query: {
-                    categories: category.id
-                }
+                categoryId: category.id
             }
         });
 
@@ -36,7 +34,7 @@ export class CategoriesComponent extends React.Component {
             <ScrollView>
                 <List>
                     {categories.map((category) =>
-                        <ListItem key={category.id} onPress={() => goToPostList( category )}>
+                        <ListItem key={category.id} onPress={() => goToPostList(category)}>
                             <Text>{category.name} ({category.count})</Text>
                         </ListItem>
                     )}
