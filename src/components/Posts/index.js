@@ -26,7 +26,7 @@ export class PostListComponent extends React.Component {
                 <List>
                     {posts.map((post) =>
                         <ListItem key={post.id}>
-                            <Text>{post.name} ({post.count})</Text>
+                            <Text>{post.name}</Text>
                         </ListItem>
                     )}
                 </List>
