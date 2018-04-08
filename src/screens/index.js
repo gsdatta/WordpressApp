@@ -1,8 +1,10 @@
 import {Navigation, ScreenVisibilityListener} from 'react-native-navigation';
 import { Categories } from './Categories';
+import { Posts } from './Posts';
 
 export function registerScreens() {
     Navigation.registerComponent('categories.List', () => Categories);
+    Navigation.registerComponent('posts.List', () => Posts);
 }
 
 export function registerScreenVisibilityListener() {
