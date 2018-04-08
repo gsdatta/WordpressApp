@@ -1274,6 +1274,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.foodandremedy.swayampaaka;
 				PRODUCT_NAME = WordpressApp;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1295,6 +1296,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.foodandremedy.swayampaaka;
 				PRODUCT_NAME = WordpressApp;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
