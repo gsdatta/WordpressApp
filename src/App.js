@@ -3,8 +3,8 @@
  * https://github.com/facebook/react-native
  * @flow
  */
+import React from 'react';
 
-import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
@@ -13,9 +13,6 @@ import {
 } from 'react-native';
 import { registerScreens, registerScreenVisibilityListener } from './screens';
 import { Navigation } from 'react-native-navigation';
-fetch('https://swayampaaka.com/wp-json/wp/v2/categories').then(res => {
-  console.log(res);
-});
 
 registerScreens();
 registerScreenVisibilityListener();
