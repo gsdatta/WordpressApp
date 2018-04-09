@@ -42,7 +42,7 @@ export class WP {
                 console.log(res);
                 return res.json();
             })
-            .then(json => json.map(p => new Post(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"))));
+            .then(json => json.map(p => new Post(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date))));
     }
 
     post(id) {

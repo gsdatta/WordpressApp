@@ -101,11 +101,17 @@ export class PostListComponent extends React.Component {
                             </View>
                         );
                     }}
-                    renderRow={post=> {
+                    renderRow={post => {
                         return (
                             <View style={[styles.listItem, styles.container]}>
-                                <Image style={{width: 300, height: 150, marginBottom: 10}} source={{uri: post.media_url }} resizeMode={'cover'}/>
+                                <Image style={styles.image}
+                                       source={{
+                                           uri: post.media_url,
+                                           headers: {'User-Agent': 'Mozilla/5.0'}
+                                       }}
+                                       resizeMode={'cover'}/>
                                 <Text>{post.name}</Text>
+                                <Text style={styles.date}>Posted on: {post.posted_date.toDateString()}</Text>
                             </View>
                         )
                     }}
@@ -130,8 +136,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center'
     },
-    vertical: {
-        flexDirection: 'column',
-        justifyContent: 'center'
+    image: {
+        width: 300,
+        height: 150,
+        marginBottom: 10
+    },
+    date: {
+        color: 'gray',
+        fontSize: 11,
+        textAlign: 'right',
+        marginTop: 10
     }
 });

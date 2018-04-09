@@ -5,25 +5,27 @@
  */
 import React from 'react';
 
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-import { registerScreens, registerScreenVisibilityListener } from './screens';
-import { Navigation } from 'react-native-navigation';
+import {Platform} from 'react-native';
+import {registerScreens, registerScreenVisibilityListener} from './screens';
+import {Navigation} from 'react-native-navigation';
 
 registerScreens();
 registerScreenVisibilityListener();
 
-const tabs = [{
-  'label': 'Categories',
-  'screen': 'categories.List',
-  'title': 'Categories List'
-}]
+const tabs = [
+    {
+        'label': 'Latest',
+        'screen': 'posts.List',
+        'title': 'Latest Recipes'
+    },
+    {
+        'label': 'Categories',
+        'screen': 'categories.List',
+        'title': 'Recipe Categories'
+    }
+];
 
 Navigation.startTabBasedApp({
-  tabs,
-  animationType: Platform.OS === 'ios' ? 'slide-down' : 'fade',
-})
+    tabs,
+    animationType: Platform.OS === 'ios' ? 'slide-down' : 'fade',
+});
