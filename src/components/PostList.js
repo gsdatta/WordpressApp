@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, ListView, StyleSheet} from 'react-native';
+import {ActivityIndicator, Image, ListView, StyleSheet} from 'react-native';
 import {Text, View} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
@@ -7,7 +7,6 @@ import {WP_SERVER} from "../config";
 export class PostListComponent extends React.Component {
     constructor(props) {
         super(props);
-        // this.getPostData = this._getPostData.bind(this);
 
         this.state = {
             posts: null,
@@ -61,8 +60,18 @@ export class PostListComponent extends React.Component {
                     isLoading: false,
                     isLoadingMore: false
                 });
+
+                console.log(this.state.dataSource);
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+
+                this.setState({
+                    isLoadingMore: false,
+                    isLoading: false,
+                    canLoadMore: false
+                });
+            });
     }
 
     render() {
@@ -74,6 +83,7 @@ export class PostListComponent extends React.Component {
                 </View>
             )
         } else {
+            console.log(this.state.dataSource);
             return (
                 <ListView
                     dataSource={this.state.dataSource}
@@ -91,14 +101,14 @@ export class PostListComponent extends React.Component {
                             </View>
                         );
                     }}
-                    renderRow={post => {
+                    renderRow={post=> {
                         return (
-                            <View style={styles.listItem}>
+                            <View style={[styles.listItem, styles.container]}>
+                                <Image style={{width: 300, height: 150, marginBottom: 10}} source={{uri: post.media_url }} resizeMode={'cover'}/>
                                 <Text>{post.name}</Text>
                             </View>
                         )
-                    }
-                    }
+                    }}
                 >
                 </ListView>
             );
@@ -110,9 +120,11 @@ const styles = StyleSheet.create({
     listItem: {
         flex: 1,
         flexDirection: "row",
+        flexWrap: 'wrap',
         borderBottomWidth: 1,
         borderBottomColor: "#d6d7da",
-        padding: 20
+        padding: 20,
+        margin: 3
     },
     container: {
         flex: 1,
