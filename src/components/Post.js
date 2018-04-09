@@ -1,8 +1,9 @@
 import React from 'react';
-import {ActivityIndicator, Image, StyleSheet, WebView} from 'react-native';
+import {ActivityIndicator, Image, ScrollView, StyleSheet} from 'react-native';
 import {Text, View} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
+import HTML from 'react-native-render-html';
 
 export class PostComponent extends React.Component {
     webview = null;
@@ -29,7 +30,10 @@ export class PostComponent extends React.Component {
     _getPostData() {
         console.log(this.state.postId);
         new WP(WP_SERVER).post(this.state.postId)
-            .then(p => {console.log(p); return p})
+            .then(p => {
+                console.log(p);
+                return p
+            })
             .then(p => {
                 this.setState({
                     post: p,
@@ -52,7 +56,7 @@ export class PostComponent extends React.Component {
         } else {
             let post = this.state.post;
 
-            let HTML = '<html>' +
+            let myHTML = '<html>' +
                 '<head>' +
                 '<title></title>' +
                 '</head>' +
@@ -66,28 +70,19 @@ export class PostComponent extends React.Component {
                 'window.postMessage( document.body.scrollHeight );';
 
             return (
-                <View style={[styles.container]}>
-                    <Image style={styles.image}
-                           source={{
-                               uri: post.media_url,
-                               headers: {'User-Agent': 'Mozilla/5.0'}
-                           }}
-                           resizeMode={'cover'}/>
-                    <Text>{post.name}</Text>
-                    <Text style={styles.date}>Posted on: {post.posted_date.toDateString()}</Text>
-                    <WebView
-                        ref={webview => {
-                            this.webview = webview;
-                        }}
-                        injectedJavaScript={javascript}
-                        javaScriptEnabled={true}
-                        javaScriptEnabledAndroid={true}
-                        scalesPageToFit={false}
-                        scrollEnabled={true}
-                        style={[htmlStyles]}
-                        source={{html: HTML}}/>
-
-                </View>
+                <ScrollView contentContainerStyle={styles.container} style={{flex: 1, flexDirection: 'column'}}>
+                    <View style={{ padding: 10, border: '10px solid gray'}}>
+                        <Image style={styles.image}
+                               source={{
+                                   uri: post.media_url,
+                                   headers: {'User-Agent': 'Mozilla/5.0'}
+                               }}
+                               resizeMode={'cover'}/>
+                        <Text style={{marginTop: 10, fontWeight: 'bold', fontSize: 20}}>{post.name}</Text>
+                        <Text style={styles.date}>Posted on: {post.posted_date.toDateString()}</Text>
+                    </View>
+                    <HTML html={myHTML}/>
+                </ScrollView>
             );
         }
     }
@@ -95,7 +90,9 @@ export class PostComponent extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
+        // flexDirection: 'row',
+        padding: 20,
         justifyContent: 'center',
         // alignItems: 'center',
         // flexWrap: 'wrap'
@@ -103,7 +100,7 @@ const styles = StyleSheet.create({
     image: {
         width: 300,
         height: 150,
-        marginBottom: 10
+        // marginBottom: 10
     },
     date: {
         color: 'gray',
