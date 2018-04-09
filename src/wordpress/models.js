@@ -10,7 +10,7 @@ export class Category {
     }
 }
 
-export class Post {
+export class PostMetadata {
     id = null;
     name = null;
     media_id = null;
