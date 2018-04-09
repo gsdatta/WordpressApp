@@ -46,6 +46,12 @@ export class WP {
     }
 
     post(id) {
-        let url = `${this.url}/post/${id}`
+        let url = `${this.url}/posts/${id}`;
+
+        return this.getURL(url)
+            .then(res => res.json())
+            .then(p => new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.content.rendered))
+            .then(p => {console.log(p); return p});
+
     }
 }

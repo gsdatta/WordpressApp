@@ -16,12 +16,14 @@ export class PostMetadata {
     media_id = null;
     media_url = null;
     posted_date = null;
+    post_content = null;
 
-    constructor(id, name, media_id, media_url, posted_date) {
+    constructor(id, name, media_id, media_url, posted_date, post_content = null) {
         this.id = id;
         this.name = name;
         this.media_id = media_id;
         this.media_url = media_url;
         this.posted_date = posted_date;
+        this.post_content = post_content;
     }
 }

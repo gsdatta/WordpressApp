@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, Image, ListView, StyleSheet} from 'react-native';
+import {ActivityIndicator, Image, ListView, StyleSheet, TouchableHighlight} from 'react-native';
 import {Text, View} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
@@ -83,7 +83,15 @@ export class PostListComponent extends React.Component {
                 </View>
             )
         } else {
-            console.log(this.state.dataSource);
+            console.log(this.props.navigator);
+            const goToPost = (post) => this.props.navigator.push({
+                screen: 'posts.Single',
+                passProps: {
+                    navigator: this.props.navigator,
+                    postId: post.id
+                }
+            });
+
             return (
                 <ListView
                     dataSource={this.state.dataSource}
@@ -103,16 +111,20 @@ export class PostListComponent extends React.Component {
                     }}
                     renderRow={post => {
                         return (
-                            <View style={[styles.listItem, styles.container]}>
-                                <Image style={styles.image}
-                                       source={{
-                                           uri: post.media_url,
-                                           headers: {'User-Agent': 'Mozilla/5.0'}
-                                       }}
-                                       resizeMode={'cover'}/>
-                                <Text>{post.name}</Text>
-                                <Text style={styles.date}>Posted on: {post.posted_date.toDateString()}</Text>
-                            </View>
+                            <TouchableHighlight onPress={() => {
+                                return goToPost(post);
+                            }}>
+                                <View style={[styles.listItem, styles.container]}>
+                                    <Image style={styles.image}
+                                           source={{
+                                               uri: post.media_url,
+                                               headers: {'User-Agent': 'Mozilla/5.0'}
+                                           }}
+                                           resizeMode={'cover'}/>
+                                    <Text>{post.name}</Text>
+                                    <Text style={styles.date}>Posted on: {post.posted_date.toDateString()}</Text>
+                                </View>
+                            </TouchableHighlight>
                         )
                     }}
                 >

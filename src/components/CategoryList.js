@@ -25,7 +25,7 @@ export class CategoriesComponent extends React.Component {
         const goToPostList = (category) => this.props.navigator.push({
             screen: 'posts.List',
             passProps: {
-                navigation: this.props.navigator,
+                navigator: this.props.navigator,
                 categoryId: category.id
             }
         });
