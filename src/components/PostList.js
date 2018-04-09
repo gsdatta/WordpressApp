@@ -1,6 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, Image, ListView, StyleSheet, TouchableHighlight} from 'react-native';
-import {Text, View} from 'native-base';
+import {Body, Card, CardItem, Text, View} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
 
@@ -94,6 +94,7 @@ export class PostListComponent extends React.Component {
 
             return (
                 <ListView
+                    style={{padding: 10}}
                     dataSource={this.state.dataSource}
                     onEndReached={() => {
                         if (!this.state.isLoadingMore && this.state.canLoadMore) {
@@ -114,16 +115,23 @@ export class PostListComponent extends React.Component {
                             <TouchableHighlight onPress={() => {
                                 return goToPost(post);
                             }}>
-                                <View style={[styles.listItem, styles.container]}>
+                            <Card onPress={() => {return goToPost(post)}}>
+                                <CardItem>
+                                    <Body>
+                                    <Text>{post.name}</Text>
+                                    </Body>
+                                </CardItem>
+                                <CardItem cardBody>
                                     <Image style={styles.image}
                                            source={{
                                                uri: post.media_url,
                                                headers: {'User-Agent': 'Mozilla/5.0'}
-                                           }}
-                                           resizeMode={'cover'}/>
-                                    <Text>{post.name}</Text>
+                                           }}/>
+                                </CardItem>
+                                <CardItem>
                                     <Text style={styles.date}>Posted on: {post.posted_date.toDateString()}</Text>
-                                </View>
+                                </CardItem>
+                            </Card>
                             </TouchableHighlight>
                         )
                     }}
@@ -149,9 +157,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     image: {
-        width: 300,
-        height: 150,
-        marginBottom: 10
+        width: null,
+        height: 250,
+        flex: 1
     },
     date: {
         color: 'gray',
