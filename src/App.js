@@ -6,12 +6,11 @@
 import React from 'react';
 
 import {Platform} from 'react-native';
-import {registerScreens, registerScreenVisibilityListener} from './screens';
+import {registerScreens} from './screens';
 import {Navigation} from 'react-native-navigation';
 import Icon from "react-native-vector-icons/Ionicons";
 
-registerScreens();
-registerScreenVisibilityListener();
+// registerScreenVisibilityListener();
 
 async function prepareIcons() {
     const icons = await Promise.all([
@@ -23,7 +22,8 @@ async function prepareIcons() {
 }
 
 
-async function startApp() {
+async function start() {
+    registerScreens();
     const icons = await prepareIcons();
     const tabs = [
         {
@@ -39,10 +39,56 @@ async function startApp() {
             icon: icons.categories
         }
     ];
-    Navigation.startTabBasedApp({
-        tabs,
-        animationType: Platform.OS === 'ios' ? 'slide-down' : 'fade',
+    Navigation.events().registerAppLaunchedListener(() => {
+        Navigation.setRoot({
+          root: {
+            bottomTabs: {
+              children: [{
+                stack: {
+                  children: [{
+                    component: {
+                      name: 'posts.List',
+                      passProps: {
+                        text: 'Latest Recipes'
+                      }
+                    }
+                  }],
+                  options: {
+                    bottomTab: {
+                      text: 'Latest',
+                      icon: icons.home
+                    }
+                  }
+                }
+              },
+              {
+                stack: {
+                  children: [{
+                    component: {
+                      name: 'categories.List',
+                      passProps: {
+                        text: 'Recipe Categories'
+                      }
+                    }
+                  }],
+                  options: {
+                    bottomTab: {
+                      text: 'Categories',
+                      icon: icons.categories
+                    }
+                  }
+                }
+              }]
+            }
+          }
+        });
     });
+    // Navigation.startTabBasedApp({
+    //     tabs,
+    //     animationType: Platform.OS === 'ios' ? 'slide-down' : 'fade',
+    // });
 }
 
-startApp();
+module.exports = {
+  start
+};
