@@ -97,13 +97,9 @@ export class PostListComponent extends React.Component {
             )
         } else {
             console.log(this.props.navigator);
-            const goToPost = (post) => this.props.navigator.push({
-                screen: 'posts.Single',
-                passProps: {
-                    navigator: this.props.navigator,
-                    postId: post.id
-                }
-            });
+            const goToPost = (post) => this.props.navigation.navigate(
+                'Post',
+                {postId: post.id});
 
             const savePost = (post) => {
                 let posts = this.state.saved;

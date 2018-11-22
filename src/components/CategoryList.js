@@ -22,13 +22,10 @@ export class CategoriesComponent extends React.Component {
         let categories = this.state.categories;
         console.log(categories);
 
-        const goToPostList = (category) => this.props.navigator.push({
-            screen: 'posts.List',
-            passProps: {
-                navigator: this.props.navigator,
-                categoryId: category.id
-            }
-        });
+        const goToPostList = (category) => this.props.navigation.navigate(
+            'Post', 
+            {categoryId: category.id}
+        );
 
         return (
             <ScrollView>

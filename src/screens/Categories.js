@@ -21,7 +21,7 @@ export class Categories extends React.Component {
     render() {
         const categories = this.state.categories;
         return (
-            <CategoriesComponent categories={categories} navigator={this.props.navigator}/>
+            <CategoriesComponent categories={categories}/>
         );
     }
 }

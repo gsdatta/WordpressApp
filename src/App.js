@@ -3,92 +3,36 @@
  * https://github.com/facebook/react-native
  * @flow
  */
-import React from 'react';
-
 import {Platform} from 'react-native';
-import {registerScreens} from './screens';
-import {Navigation} from 'react-native-navigation';
-import Icon from "react-native-vector-icons/Ionicons";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-// registerScreenVisibilityListener();
+import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { CategoriesStack, PostsStack } from './screens';
 
-async function prepareIcons() {
-    const icons = await Promise.all([
-        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-home' : 'material-home', 20),
-        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-folder-open' : 'material-folder', 20)
-    ]);
-    const [home, categories] = icons;
-    return {home, categories};
-}
-
-
-async function start() {
-    registerScreens();
-    const icons = await prepareIcons();
-    const tabs = [
-        {
-            label: 'Latest',
-            screen: 'posts.List',
-            title: 'Latest Recipes',
-            icon: icons.home
-        },
-        {
-            label: 'Categories',
-            screen: 'categories.List',
-            title: 'Recipe Categories',
-            icon: icons.categories
+export const App = createAppContainer(createBottomTabNavigator(
+  {
+    Latest: PostsStack,
+    Categories: CategoriesStack,
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+        let iconName;
+        if (routeName === 'Latest') {
+            iconName = `${Platform.OS === 'ios' ? 'ios' : 'material'}-home`
+        } else if (routeName === 'Categories') {
+          iconName = Platform.OS === 'ios' ? 'ios-folder-open' : 'material-folder'
         }
-    ];
-    Navigation.events().registerAppLaunchedListener(() => {
-        Navigation.setRoot({
-          root: {
-            bottomTabs: {
-              children: [{
-                stack: {
-                  children: [{
-                    component: {
-                      name: 'posts.List',
-                      passProps: {
-                        text: 'Latest Recipes'
-                      }
-                    }
-                  }],
-                  options: {
-                    bottomTab: {
-                      text: 'Latest',
-                      icon: icons.home
-                    }
-                  }
-                }
-              },
-              {
-                stack: {
-                  children: [{
-                    component: {
-                      name: 'categories.List',
-                      passProps: {
-                        text: 'Recipe Categories'
-                      }
-                    }
-                  }],
-                  options: {
-                    bottomTab: {
-                      text: 'Categories',
-                      icon: icons.categories
-                    }
-                  }
-                }
-              }]
-            }
-          }
-        });
-    });
-    // Navigation.startTabBasedApp({
-    //     tabs,
-    //     animationType: Platform.OS === 'ios' ? 'slide-down' : 'fade',
-    // });
-}
 
-module.exports = {
-  start
-};
+        // You can return any component that you like here! We usually use an
+        // icon component from react-native-vector-icons
+        return <Ionicons name={iconName} size={horizontal ? 20 : 25} color={tintColor} />;
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray',
+    },
+  }
+));
