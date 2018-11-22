@@ -10,7 +10,7 @@ export class PostsScreen extends React.Component {
         const postId = this.props.postId;
 
         return (
-            <PostComponent postId={postId} navigator={this.props.navigator}/>
+            <PostComponent postId={postId} componentId={this.props.componentId}/>
         );
     }
 }

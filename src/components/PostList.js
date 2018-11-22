@@ -95,10 +95,10 @@ export default class PostListComponent extends React.Component {
         });
     }
 
-    async goToPost(post) {
+    goToPost = (post) => {
         console.log(`ComponentId: ${this.props.componentId}`);
         console.log(`Loading post [${post.id}]`);
-        await Navigation.push(this.props.componentId, {
+        Navigation.push(this.props.componentId, {
             component: {
                 name: 'posts.Single',
                 passProps: {

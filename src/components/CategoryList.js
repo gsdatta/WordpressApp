@@ -25,18 +25,19 @@ export default class CategoriesComponent extends React.Component {
         }).then(cat => this.setState({categories: cat}));
     }
 
-    async goToPostList(category) {
+    goToPostList = (category) => {
         console.log(`ComponentId: ${this.props.componentId}`);
-        console.log(`Loading category [${category.id}]`);
-
-        await Navigation.push(this.props.componentId, {
+        console.log(`Loading category ${category.id}`);
+        let opts = {
             component: {
                 name: 'posts.List',
                 passProps: {
-                    categoryId: category.id
+                    'categoryId': category.id
                 }
             }
-        });
+        };
+        console.log(opts);
+        Navigation.push(this.props.componentId, opts);
     }
 
     render() {

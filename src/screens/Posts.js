@@ -10,7 +10,7 @@ export class Posts extends React.Component {
         const categoryId = this.props.categoryId;
 
         return (
-            <PostListComponent category={categoryId}/>
+            <PostListComponent categoryId={categoryId} componentId={this.props.componentId}/>
         );
     }
 }
