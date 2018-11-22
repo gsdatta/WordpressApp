@@ -10,8 +10,6 @@ import {registerScreens} from './screens';
 import {Navigation} from 'react-native-navigation';
 import Icon from "react-native-vector-icons/Ionicons";
 
-// registerScreenVisibilityListener();
-
 async function prepareIcons() {
     const icons = await Promise.all([
         Icon.getImageSource(Platform.OS === 'ios' ? 'ios-home' : 'material-home', 20),
@@ -22,11 +20,11 @@ async function prepareIcons() {
 }
 
 
-export default function start() {
+export default async function start() {
   console.log("STARTING UP");
     registerScreens();
-    prepareIcons().then((icons) => {
-      console.log("ICONS READY");
+    let icons = await prepareIcons()
+    console.log("ICONS READY");
     const tabs = [
         {
             label: 'Latest',
@@ -99,7 +97,6 @@ export default function start() {
           }
         });
     });
-  });
     // Navigation.startTabBasedApp({
     //     tabs,
     //     animationType: Platform.OS === 'ios' ? 'slide-down' : 'fade',

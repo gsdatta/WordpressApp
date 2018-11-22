@@ -23,9 +23,10 @@ export class WP {
             });
     }
 
-    posts(params) {
+    async posts(params) {
         let url = `${this.url}/posts`;
         console.log(params);
+
         if (params) {
             let urlParams = new URLSearchParams();
             for (let p in params) {
@@ -37,12 +38,9 @@ export class WP {
 
         console.log(url);
 
-        return this.getURL(url)
-            .then(res => {
-                console.log(res);
-                return res.json();
-            })
-            .then(json => json.map(p => new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date))));
+        let data = await this.getURL(url);
+        let json = await data.json();
+        return json.map(p => new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.link, p.excerpt.rendered));
     }
 
     post(id) {
@@ -50,7 +48,7 @@ export class WP {
 
         return this.getURL(url)
             .then(res => res.json())
-            .then(p => new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.content.rendered))
+            .then(p => new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.link, p.excerpt.rendered, p.content.rendered))
             .then(p => {console.log(p); return p});
 
     }

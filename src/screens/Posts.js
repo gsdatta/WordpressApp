@@ -27,16 +27,18 @@ export class Posts extends React.Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this._getPostData(this.props.categoryId);
         let saved = [];
-
-        AsyncStorage.getItem('@Swayampaaka:saved_items').then(s => {
+        try {
+	        let s = await AsyncStorage.getItem('@Swayampaaka:saved_items')
             console.log(`Items currently saved: ${s}`);
             if (s !== null) {
                 saved = JSON.parse(s);
-            }
-        }).catch(err => console.log(err));
+            } 
+    	} catch (error) {
+    		console.log(error);
+    	}
 
         this.setState({saved: saved});
     }
@@ -91,7 +93,7 @@ export class Posts extends React.Component {
     _onRefresh = () => {
         this.setState({refreshing: true});
 
-        this._getPostData().then(() => {
+        this._getPostData(this.state.categoryId).then(() => {
             this.setState({refreshing: false});
         });
     }
@@ -142,7 +144,7 @@ export class Posts extends React.Component {
                     onEndReached={() => {
                         if (!this.state.isLoadingMore && this.state.canLoadMore) {
                             this.setState({isLoadingMore: true});
-                            this._getPostData();
+                            this._getPostData(this.state.categoryId);
                         }
                     }}
                     renderFooter={() => {
@@ -159,7 +161,7 @@ export class Posts extends React.Component {
                             	post={post} 
                             	onPress={this.goToPost} 
                             	onLike={savePost}
-                            	isLiked={this.state.saved.includes(post.id)}
+                            	isLiked={(post) => this.state.saved.includes(post.id)}
                         	/>
                         )
                     }}
