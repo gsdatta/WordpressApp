@@ -1,10 +1,11 @@
 import React from 'react';
-import {ActivityIndicator, AsyncStorage, Image, ListView, StyleSheet, TouchableOpacity, RefreshControl} from 'react-native';
-import {Body, Card, CardItem, Col, Grid, Text, View} from 'native-base';
+import {ActivityIndicator, AsyncStorage, ListView, StyleSheet, RefreshControl} from 'react-native';
+import {View, Text} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
 import Icon from "react-native-vector-icons/Ionicons";
 import {Navigation} from 'react-native-navigation';
+import {ListPostItem} from '../components';
 
 export class Posts extends React.Component {
     constructor(props) {
@@ -154,47 +155,7 @@ export class Posts extends React.Component {
                     }}
                     renderRow={post => {
                         return (
-                            <Card>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        return this.goToPost(post);
-                                    }}
-                                    activeOpacity={0.7}
-                                >
-                                    <CardItem>
-                                        <Body>
-                                        <Text>{post.name}</Text>
-                                        </Body>
-                                    </CardItem>
-                                    <CardItem cardBody>
-                                        <Image style={styles.image}
-                                               source={{
-                                                   uri: post.media_url,
-                                                   headers: {'User-Agent': 'Mozilla/5.0'}
-                                               }}/>
-                                    </CardItem>
-                                </TouchableOpacity>
-                                <CardItem>
-                                    <Grid>
-                                        <Col>
-                                            <Text style={styles.date}>Posted
-                                                on: {post.posted_date.toDateString()}</Text>
-                                        </Col>
-                                        <Col>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    return savePost(post);
-                                                }}
-                                                activeOpacity={0.5}>
-                                                <Icon
-                                                    name={this.state.saved.includes(post.id) ? 'ios-heart' : 'ios-heart-outline'}
-                                                    size={20} style={{textAlign: 'right'}}
-                                                    color={'red'}/>
-                                            </TouchableOpacity>
-                                        </Col>
-                                    </Grid>
-                                </CardItem>
-                            </Card>
+                            <ListPostItem post={post} onPress={this.goToPost} />
                         )
                     }}
                 >
@@ -217,16 +178,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center'
-    },
-    image: {
-        width: null,
-        height: 250,
-        flex: 1
-    },
-    date: {
-        color: 'gray',
-        fontSize: 11,
-        textAlign: 'right',
-        marginTop: 10
     }
 });

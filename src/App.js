@@ -53,8 +53,14 @@ export default function start() {
                     {
                       component: {
                         name: 'posts.List',
-                        passProps: {
-                          text: 'Latest Recipes'
+                        options: {
+                          topBar: {
+                            visible: true,
+                            title: {
+                              text: 'Latest Recipes'
+                            },
+                            hideOnScroll: true,
+                          }
                         }
                       }
                     },
@@ -72,8 +78,13 @@ export default function start() {
                   children: [{
                     component: {
                       name: 'categories.List',
-                      passProps: {
-                        text: 'Recipe Categories'
+                      options: {
+                        topBar: {
+                          visible: true,
+                          title: {
+                            text: 'Categories'
+                          }
+                        }
                       }
                     }
                   }],
