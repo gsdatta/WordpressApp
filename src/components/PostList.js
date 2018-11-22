@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, AsyncStorage, Image, ListView, StyleSheet, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, AsyncStorage, Image, ListView, StyleSheet, TouchableOpacity, RefreshControl} from 'react-native';
 import {Body, Card, CardItem, Col, Grid, Text, View} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
@@ -10,12 +10,17 @@ class PostListComponent extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
+        this.state = this._getDefaultState();
+    }
+
+    _getDefaultState() {
+        return {
             posts: null,
             categoryId: null,
             dataSource: null,
             isLoadingMore: false,
             saved: [],
+            refreshing: false,
             page: 1
         };
     }
@@ -46,7 +51,7 @@ class PostListComponent extends React.Component {
 
         params.page = this.state.page;
 
-        new WP(WP_SERVER).posts(params)
+        return new WP(WP_SERVER).posts(params)
             .then(cat => {
                 let posts = this.state.posts;
 
@@ -84,6 +89,14 @@ class PostListComponent extends React.Component {
             });
     }
 
+    _onRefresh = () => {
+        this.setState({refreshing: true});
+
+        this._getPostData().then(() => {
+            this.setState({refreshing: false});
+        });
+    }
+
     render() {
         if (this.state.isLoading || this.state.dataSource === null) {
             return (
@@ -93,7 +106,6 @@ class PostListComponent extends React.Component {
                 </View>
             )
         } else {
-            console.log(this.props.navigator);
             const goToPost = (post) => this.props.navigation.navigate(
                 'Post',
                 {postId: post.id});
@@ -113,6 +125,12 @@ class PostListComponent extends React.Component {
                 <ListView
                     style={{padding: 10}}
                     dataSource={this.state.dataSource}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh}
+                      />
+                    }
                     onEndReached={() => {
                         if (!this.state.isLoadingMore && this.state.canLoadMore) {
                             this.setState({isLoadingMore: true});
