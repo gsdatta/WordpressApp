@@ -5,7 +5,7 @@ import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
 import HTML from 'react-native-render-html';
 
-export default class PostComponent extends React.Component {
+export class SinglePost extends React.Component {
 
     constructor(props) {
         super(props);
