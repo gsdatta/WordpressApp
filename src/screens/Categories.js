@@ -19,9 +19,8 @@ export class Categories extends React.Component {
     }
 
     render() {
-        const categories = this.state.categories;
         return (
-            <CategoriesComponent categories={categories}/>
+            <CategoriesComponent/>
         );
     }
 }

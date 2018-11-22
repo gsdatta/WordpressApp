@@ -17,7 +17,7 @@ export default class PostComponent extends React.Component {
     }
 
     componentDidMount() {
-        this._getPostData(this.props.navigation.getParam('postId'));
+        this._getPostData(this.props.postId);
     }
 
     _getPostData(postId) {

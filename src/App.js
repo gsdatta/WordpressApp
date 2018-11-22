@@ -48,14 +48,17 @@ export default function start() {
             bottomTabs: {
               children: [{
                 stack: {
-                  children: [{
-                    component: {
-                      name: 'posts.List',
-                      passProps: {
-                        text: 'Latest Recipes'
+                  id: 'latestRecipes',
+                  children: [
+                    {
+                      component: {
+                        name: 'posts.List',
+                        passProps: {
+                          text: 'Latest Recipes'
+                        }
                       }
-                    }
-                  }],
+                    },
+                  ],
                   options: {
                     bottomTab: {
                       text: 'Latest',

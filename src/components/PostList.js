@@ -4,12 +4,14 @@ import {Body, Card, CardItem, Col, Grid, Text, View} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
 import Icon from "react-native-vector-icons/Ionicons";
+import {Navigation} from 'react-native-navigation';
 
 export default class PostListComponent extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = this._getDefaultState();
+        this.goToPost = this.goToPost.bind(this);
     }
 
     _getDefaultState() {
@@ -25,11 +27,11 @@ export default class PostListComponent extends React.Component {
     }
 
     componentDidMount() {
-        this._getPostData();
+        this._getPostData(this.props.categoryId);
         let saved = [];
 
         AsyncStorage.getItem('@Swayampaaka:saved_items').then(s => {
-            console.log(s);
+            console.log(`Items currently saved: ${s}`);
             if (s !== null) {
                 saved = JSON.parse(s);
             }
@@ -38,10 +40,9 @@ export default class PostListComponent extends React.Component {
         this.setState({saved: saved});
     }
 
-    _getPostData() {
+    _getPostData(categoryId) {
         let params = {};
-        categoryId = this.props.navigation.getParam('categoryId');
-        console.log(`Category ID: ${categoryId}`);
+        console.log(`Loading list of posts for category [${categoryId}]`);
 
         if (categoryId) {
             this.state.categoryId = categoryId;
@@ -74,8 +75,6 @@ export default class PostListComponent extends React.Component {
                     isLoading: false,
                     isLoadingMore: false
                 });
-
-                console.log(this.state.dataSource);
             })
             .catch(err => {
                 console.log(err);
@@ -96,6 +95,19 @@ export default class PostListComponent extends React.Component {
         });
     }
 
+    async goToPost(post) {
+        console.log(`ComponentId: ${this.props.componentId}`);
+        console.log(`Loading post [${post.id}]`);
+        await Navigation.push(this.props.componentId, {
+            component: {
+                name: 'posts.Single',
+                passProps: {
+                    postId: post.id
+                }
+            }
+        });
+    }
+
     render() {
         if (this.state.isLoading || this.state.dataSource === null) {
             return (
@@ -105,10 +117,6 @@ export default class PostListComponent extends React.Component {
                 </View>
             )
         } else {
-            const goToPost = (post) => this.props.navigation.navigate(
-                'Post',
-                {postId: post.id});
-
             const savePost = (post) => {
                 let posts = this.state.saved;
                 if (posts.includes(post.id)) {
@@ -149,7 +157,7 @@ export default class PostListComponent extends React.Component {
                             <Card>
                                 <TouchableOpacity
                                     onPress={() => {
-                                        return goToPost(post);
+                                        return this.goToPost(post);
                                     }}
                                     activeOpacity={0.7}
                                 >
