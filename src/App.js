@@ -58,8 +58,7 @@ export default function start() {
                             visible: true,
                             title: {
                               text: 'Latest Recipes'
-                            },
-                            hideOnScroll: true,
+                            }
                           }
                         }
                       }

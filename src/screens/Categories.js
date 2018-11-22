@@ -32,6 +32,13 @@ export class Categories extends React.Component {
                 name: 'posts.List',
                 passProps: {
                     'categoryId': category.id
+                },
+                options: {
+                  topBar: {
+                    title: {
+                      text: category.name
+                    }
+                  }
                 }
             }
         };

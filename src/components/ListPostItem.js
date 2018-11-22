@@ -11,6 +11,8 @@ export default class ListPostItem extends React.Component {
 	render() {
 		const post = this.props.post;
 		const onPress = this.props.onPress;
+		const onLike = this.props.onLike;
+		const isLiked = this.props.isLiked;
 
 		return (
 			<Card>
@@ -40,11 +42,11 @@ export default class ListPostItem extends React.Component {
 	                    <Col>
 	                        <TouchableOpacity
 	                            onPress={() => {
-	                                return savePost(post);
+	                                return onLike(post);
 	                            }}
 	                            activeOpacity={0.5}>
 	                            <Icon
-	                                name={'ios-heart'}
+	                                name={isLiked ? 'ios-heart' : 'ios-heart-outline'}
 	                                size={20} style={{textAlign: 'right'}}
 	                                color={'red'}/>
 	                        </TouchableOpacity>

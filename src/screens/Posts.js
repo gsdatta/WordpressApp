@@ -155,7 +155,12 @@ export class Posts extends React.Component {
                     }}
                     renderRow={post => {
                         return (
-                            <ListPostItem post={post} onPress={this.goToPost} />
+                            <ListPostItem 
+                            	post={post} 
+                            	onPress={this.goToPost} 
+                            	onLike={savePost}
+                            	isLiked={this.state.saved.includes(post.id)}
+                        	/>
                         )
                     }}
                 >
