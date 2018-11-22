@@ -4,6 +4,7 @@ import {Card, Text, View} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
 import HTML from 'react-native-render-html';
+import { withNavigation } from 'react-navigation'
 
 export class PostComponent extends React.Component {
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
 import {List, ListItem, Text} from 'native-base';
+import { withNavigation } from 'react-navigation'
 
-export class CategoriesComponent extends React.Component {
+class CategoriesComponent extends React.Component {
     constructor(props) {
         super(props);
 
@@ -23,9 +24,7 @@ export class CategoriesComponent extends React.Component {
         console.log(categories);
 
         const goToPostList = (category) => this.props.navigation.navigate(
-            'Post', 
-            {categoryId: category.id}
-        );
+            'Post', {categoryId: category.id});
 
         return (
             <ScrollView>
@@ -40,3 +39,5 @@ export class CategoriesComponent extends React.Component {
         );
     }
 }
+
+export default withNavigation(CategoriesComponent);
