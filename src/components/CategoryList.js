@@ -24,7 +24,7 @@ class CategoriesComponent extends React.Component {
         console.log(categories);
 
         const goToPostList = (category) => this.props.navigation.navigate(
-            'Post', {categoryId: category.id});
+            'Posts', {categoryId: category.id});
 
         return (
             <ScrollView>

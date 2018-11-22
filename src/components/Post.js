@@ -6,7 +6,7 @@ import {WP_SERVER} from "../config";
 import HTML from 'react-native-render-html';
 import { withNavigation } from 'react-navigation'
 
-export class PostComponent extends React.Component {
+class PostComponent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -17,19 +17,13 @@ export class PostComponent extends React.Component {
         };
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        return {
-            postId: nextProps.postId
-        };
-    }
-
     componentDidMount() {
-        this._getPostData();
+        this._getPostData(this.props.navigation.getParam('postId'));
     }
 
-    _getPostData() {
-        console.log(this.state.postId);
-        new WP(WP_SERVER).post(this.state.postId)
+    _getPostData(postId) {
+        console.log(postId);
+        new WP(WP_SERVER).post(postId)
             .then(p => {
                 console.log(p);
                 return p
@@ -93,3 +87,5 @@ const styles = StyleSheet.create({
         marginTop: 10
     }
 });
+
+export default withNavigation(PostComponent);

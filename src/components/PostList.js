@@ -20,13 +20,6 @@ class PostListComponent extends React.Component {
         };
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        return {
-            categoryId: nextProps.category,
-            loadSaved: !!nextProps.loadSaved
-        };
-    }
-
     componentDidMount() {
         this._getPostData();
         let saved = [];
@@ -43,9 +36,12 @@ class PostListComponent extends React.Component {
 
     _getPostData() {
         let params = {};
+        categoryId = this.props.navigation.getParam('categoryId');
+        console.log(`Category ID: ${categoryId}`);
 
-        if (this.state.categoryId) {
-            params.categories = this.state.categoryId;
+        if (categoryId) {
+            this.state.categoryId = categoryId;
+            params.categories = categoryId;
         }
 
         params.page = this.state.page;

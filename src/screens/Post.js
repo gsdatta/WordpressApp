@@ -1,5 +1,5 @@
 import React from 'react';
-import {PostComponent} from "../components/Post";
+import PostComponent from "../components/Post";
 
 export class PostsScreen extends React.Component {
     constructor(props) {
