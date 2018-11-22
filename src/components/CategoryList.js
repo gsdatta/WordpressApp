@@ -1,9 +1,8 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
 import {List, ListItem, Text} from 'native-base';
-import { withNavigation } from 'react-navigation'
 
-class CategoriesComponent extends React.Component {
+export default class CategoriesComponent extends React.Component {
     constructor(props) {
         super(props);
 
@@ -39,5 +38,3 @@ class CategoriesComponent extends React.Component {
         );
     }
 }
-
-export default withNavigation(CategoriesComponent);

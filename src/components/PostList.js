@@ -4,9 +4,8 @@ import {Body, Card, CardItem, Col, Grid, Text, View} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
 import Icon from "react-native-vector-icons/Ionicons";
-import { withNavigation } from 'react-navigation'
 
-class PostListComponent extends React.Component {
+export default class PostListComponent extends React.Component {
     constructor(props) {
         super(props);
 
@@ -223,5 +222,3 @@ const styles = StyleSheet.create({
         marginTop: 10
     }
 });
-
-export default withNavigation(PostListComponent);

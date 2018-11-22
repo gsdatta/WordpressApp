@@ -4,9 +4,8 @@ import {Card, Text, View} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
 import HTML from 'react-native-render-html';
-import { withNavigation } from 'react-navigation'
 
-class PostComponent extends React.Component {
+export default class PostComponent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -87,5 +86,3 @@ const styles = StyleSheet.create({
         marginTop: 10
     }
 });
-
-export default withNavigation(PostComponent);

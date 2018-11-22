@@ -11,10 +11,9 @@
     "react": "16.6.1",
     "react-native": "^0.57.5",
     "react-native-cli": "^2.0.1",
-    "react-native-gesture-handler": "^1.0.9",
+    "react-native-navigation": "^2.1.3",
     "react-native-render-html": "^3.9.3",
     "react-native-vector-icons": "^4.6.0",
-    "react-navigation": "^3.0.0",
     "url-search-params": "^0.10.0"
   },
   "devDependencies": {

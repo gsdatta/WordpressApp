@@ -1,4 +1,3 @@
-import { AppRegistry } from 'react-native';
-import { App } from './src/App';
+import start from './src';
 
-AppRegistry.registerComponent('spaaka', () => App);
+start();
