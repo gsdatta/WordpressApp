@@ -22,6 +22,26 @@ async function prepareIcons() {
     };
 }
 
+function getStandardComponent(screenName, tabText) {
+    return {
+        component: {
+            name: screenName,
+            options: {
+                topBar: {
+                    visible: true,
+                    title: {
+                        text: tabText
+                    }
+                },
+                background: {
+                    translucent: true,
+                    blur: true
+                },
+                drawBehind: true
+            }
+        }
+    }
+}
 
 export default async function start() {
     console.log("STARTING UP");
@@ -39,19 +59,7 @@ export default async function start() {
                             stack: {
                                 id: 'latestRecipes',
                                 children: [
-                                    {
-                                        component: {
-                                            name: 'posts.List',
-                                            options: {
-                                                topBar: {
-                                                    visible: true,
-                                                    title: {
-                                                        text: 'Latest Recipes'
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
+                                    getStandardComponent('posts.List', 'Latest Recipes')
                                 ],
                                 options: {
                                     bottomTab: {
@@ -60,26 +68,20 @@ export default async function start() {
                                         selectedIconColor: 'blue',
                                     },
                                     bottomTabs: {
-                                        titleDisplayMode: 'alwaysShow'
+                                        titleDisplayMode: 'alwaysShow',
+                                        background: {
+                                          translucent: true
+                                        },
+                                        drawBehind: true
                                     },
                                 }
                             }
                         },
                             {
                                 stack: {
-                                    children: [{
-                                        component: {
-                                            name: 'categories.List',
-                                            options: {
-                                                topBar: {
-                                                    visible: true,
-                                                    title: {
-                                                        text: 'Categories'
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }],
+                                    children: [
+                                        getStandardComponent('categories.List', 'Categories'),
+                                    ],
                                     options: {
                                         bottomTab: {
                                             text: 'Categories',
