@@ -11,11 +11,11 @@ export default class ListPostItem extends React.Component {
     }
 
     render() {
-        const post = this.props.post;
-        const onPress = this.props.onPress;
-        const onLike = this.props.onLike;
-        const isLiked = this.props.isLiked;
-        const showExcerpt = this.props.showExcerpt;
+        let post = this.props.post;
+        let onPress = this.props.onPress;
+        let onLike = this.props.onLike;
+        let isLiked = this.props.isLiked;
+        let showExcerpt = this.props.showExcerpt;
 
         return (
             <Card>

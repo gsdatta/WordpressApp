@@ -5,7 +5,7 @@ import { WP } from "../wordpress";
 import { WP_SERVER } from "../config";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Navigation } from 'react-native-navigation';
-import { ListPostItem } from '../components';
+import { PostList } from '../components';
 
 export class Posts extends React.Component {
     constructor(props) {
@@ -17,7 +17,7 @@ export class Posts extends React.Component {
 
     _getDefaultState() {
         return {
-            posts: null,
+            posts: [],
             categoryId: null,
             isLoadingMore: false,
             saved: [],
@@ -59,11 +59,7 @@ export class Posts extends React.Component {
             .then(cat => {
                 let posts = this.state.posts;
 
-                if (posts !== null) {
-                    Array.prototype.push.apply(posts, cat);
-                } else {
-                    posts = cat;
-                }
+                Array.prototype.push.apply(posts, cat);
 
                 let nextPage = this.state.page + 1;
 
@@ -113,39 +109,27 @@ export class Posts extends React.Component {
         });
     }
 
+    savePost = (post) => {
+        let posts = this.state.saved;
+        if (posts.includes(post.id)) {
+            posts = posts.filter(p => p !== post.id);
+        } else {
+            posts.push(post.id);
+        }
+
+        AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts)).then(s => console.log(s)).catch(e => console.log(e));
+        this.setState({
+            saved: posts
+        });
+    };    
+
     render() {
-        const savePost = (post) => {
-            let posts = this.state.saved;
-            if (posts.includes(post.id)) {
-                posts = posts.filter(p => p !== post.id);
-            } else {
-                posts.push(post.id);
-            }
-
-            AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts)).then(s => console.log(s)).catch(e => console.log(e));
-            this.setState({
-                saved: posts
-            });
-        };
-
         return (
-            // <View style={styles.container}>
-                <FlatList
-                    style={styles.list}
-                    contentContainerStyle={styles.container}
-                    showsVerticalScrollIndicator={false}
-                    data={this.state.posts}
-                    renderItem={({item}) => {
-                        const post = item;
-                        return (
-                            <ListPostItem
-                            post={post}
-                            onPress={this.goToPost}
-                            onLike={savePost}
-                            isLiked={(post) => this.state.saved.includes(post.id)}
-                            />
-                        );
-                    }}
+                <PostList
+                    posts={this.state.posts}
+                    onPostPress={this.goToPost}
+                    onLike={this.savePost}
+                    isLiked={(post) => this.state.saved.includes(post.id)}
                     onEndReached={() => {
                         if (!this.state.isLoadingMore && this.state.canLoadMore) {
                             this.setState({
@@ -156,28 +140,8 @@ export class Posts extends React.Component {
                     }}
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh}
-                    keyExtractor={(post) => `${post.id}`}
-                    ListFooterComponent={() => {
-                        return (
-                            this.state.isLoadingMore &&
-                            <View style={{flex: 1}}>
-                                <ActivityIndicator size="small"/>
-                            </View>
-                        );
-                    }}
+                    footerLoading={this.state.isLoadingMore}
                 />
-            // </View>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    list: {
-        marginLeft: 10,
-        marginRight: 10
-    },
-    container: {
-        paddingBottom: 10,
-        paddingTop: 10
-    }
-});
