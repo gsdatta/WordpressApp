@@ -1,11 +1,11 @@
 import React from 'react';
-import {ActivityIndicator, AsyncStorage, ListView, StyleSheet, RefreshControl} from 'react-native';
-import {View, Text} from 'native-base';
-import {WP} from "../wordpress";
-import {WP_SERVER} from "../config";
+import { ActivityIndicator, AsyncStorage, FlatList, StyleSheet, RefreshControl } from 'react-native';
+import { View, Text } from 'native-base';
+import { WP } from "../wordpress";
+import { WP_SERVER } from "../config";
 import Icon from "react-native-vector-icons/Ionicons";
-import {Navigation} from 'react-native-navigation';
-import {ListPostItem} from '../components';
+import { Navigation } from 'react-native-navigation';
+import { ListPostItem } from '../components';
 
 export class Posts extends React.Component {
     constructor(props) {
@@ -19,7 +19,6 @@ export class Posts extends React.Component {
         return {
             posts: null,
             categoryId: null,
-            dataSource: null,
             isLoadingMore: false,
             saved: [],
             refreshing: false,
@@ -31,16 +30,18 @@ export class Posts extends React.Component {
         this._getPostData(this.props.categoryId);
         let saved = [];
         try {
-	        let s = await AsyncStorage.getItem('@Swayampaaka:saved_items')
+            let s = await AsyncStorage.getItem('@Swayampaaka:saved_items')
             console.log(`Items currently saved: ${s}`);
             if (s !== null) {
                 saved = JSON.parse(s);
-            } 
-    	} catch (error) {
-    		console.log(error);
-    	}
+            }
+        } catch ( error ) {
+            console.log(error);
+        }
 
-        this.setState({saved: saved});
+        this.setState({
+            saved: saved
+        });
     }
 
     _getPostData(categoryId) {
@@ -64,18 +65,13 @@ export class Posts extends React.Component {
                     posts = cat;
                 }
 
-                let ds = this.state.dataSource !== null ? this.state.dataSource : new ListView.DataSource({
-                    rowHasChanged: (r1, r2) => r1 !== r2
-                });
-
                 let nextPage = this.state.page + 1;
 
                 this.setState({
                     posts: posts,
                     canLoadMore: cat.length !== 0,
                     page: nextPage,
-                    dataSource: ds.cloneWithRows(posts),
-                    isLoading: false,
+                    refreshing: false,
                     isLoadingMore: false
                 });
             })
@@ -84,18 +80,24 @@ export class Posts extends React.Component {
 
                 this.setState({
                     isLoadingMore: false,
-                    isLoading: false,
+                    refreshing: false,
                     canLoadMore: false
                 });
             });
     }
 
     _onRefresh = () => {
-        this.setState({refreshing: true});
+        this.setState({
+            refreshing: true
+        });
 
         this._getPostData(this.state.categoryId).then(() => {
-            this.setState({refreshing: false});
-        });
+            this.setState({
+                refreshing: false
+            });
+        }).catch((err) => this.setState({
+            refreshing: false
+        }));
     }
 
     goToPost = (post) => {
@@ -112,43 +114,47 @@ export class Posts extends React.Component {
     }
 
     render() {
-        if (this.state.isLoading || this.state.dataSource === null) {
-            return (
-                <View style={styles.container}>
-                    <Text style={{textAlign: 'center', marginBottom: 10}}>Loading posts...</Text>
-                    <ActivityIndicator size="large" color="#0000ff"/>
-                </View>
-            )
-        } else {
-            const savePost = (post) => {
-                let posts = this.state.saved;
-                if (posts.includes(post.id)) {
-                    posts = posts.filter(p => p !== post.id);
-                } else {
-                    posts.push(post.id);
-                    AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts)).then(s => console.log(s)).catch(e => console.log(e));
-                }
-                this.setState({saved: posts});
-            };
+        const savePost = (post) => {
+            let posts = this.state.saved;
+            if (posts.includes(post.id)) {
+                posts = posts.filter(p => p !== post.id);
+            } else {
+                posts.push(post.id);
+                AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts)).then(s => console.log(s)).catch(e => console.log(e));
+            }
+            this.setState({
+                saved: posts
+            });
+        };
 
-            return (
-                <ListView
-                    style={{padding: 10}}
-                    contentContainerStyle={{justifyContent: 'center'}}
-                    dataSource={this.state.dataSource}
-                    refreshControl={
-                      <RefreshControl
-                        refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh}
-                      />
-                    }
+        return (
+            <View style={styles.container}>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={this.state.posts}
+                    renderItem={({item}) => {
+                        const post = item;
+                        return (
+                            <ListPostItem
+                            post={post}
+                            onPress={this.goToPost}
+                            onLike={savePost}
+                            isLiked={(post) => this.state.saved.includes(post.id)}
+                            />
+                        );
+                    }}
                     onEndReached={() => {
                         if (!this.state.isLoadingMore && this.state.canLoadMore) {
-                            this.setState({isLoadingMore: true});
+                            this.setState({
+                                isLoadingMore: true
+                            });
                             this._getPostData(this.state.categoryId);
                         }
                     }}
-                    renderFooter={() => {
+                    refreshing={this.state.refreshing}
+                    onRefresh={this._onRefresh}
+                    keyExtractor={(post) => `${post.id}`}
+                    ListFooterComponent={() => {
                         return (
                             this.state.isLoadingMore &&
                             <View style={{flex: 1}}>
@@ -156,20 +162,9 @@ export class Posts extends React.Component {
                             </View>
                         );
                     }}
-                    renderRow={post => {
-                        return (
-                            <ListPostItem 
-                            	post={post} 
-                            	onPress={this.goToPost} 
-                            	onLike={savePost}
-                            	isLiked={(post) => this.state.saved.includes(post.id)}
-                        	/>
-                        )
-                    }}
-                >
-                </ListView>
-            );
-        }
+                />
+            </View>
+        );
     }
 }
 
@@ -184,7 +179,7 @@ const styles = StyleSheet.create({
         margin: 3
     },
     container: {
-        flex: 1,
-        justifyContent: 'center'
+        paddingLeft: 10,
+        paddingRight: 10
     }
 });
