@@ -1,21 +1,19 @@
 import React from 'react';
-import { ActivityIndicator, AsyncStorage, FlatList, StyleSheet, RefreshControl } from 'react-native';
-import { View, Text } from 'native-base';
-import { WP } from "../wordpress";
-import { WP_SERVER } from "../config";
-import Icon from "react-native-vector-icons/Ionicons";
-import { Navigation } from 'react-native-navigation';
-import { PostList } from '../components';
+import {AsyncStorage} from 'react-native';
+import {WP} from "../stores/wordpress";
+import {WP_SERVER} from "../config";
+import {Navigation} from 'react-native-navigation';
+import {PostList} from '../components';
 
 export class Posts extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = this._getDefaultState();
+        this.state = Posts._getDefaultState();
         this.goToPost = this.goToPost.bind(this);
     }
 
-    _getDefaultState() {
+    static _getDefaultState() {
         return {
             posts: [],
             categoryId: null,

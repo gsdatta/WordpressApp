@@ -1,7 +1,7 @@
-import { Navigation } from "react-native-navigation";
-import { Categories } from './Categories';
-import { Posts } from './Posts';
-import { SinglePost } from "./SinglePost";
+import {Navigation} from "react-native-navigation";
+import {Categories} from './Categories';
+import {Posts} from './Posts';
+import {SinglePost} from "./SinglePost";
 
 export function registerScreens() {
     Navigation.registerComponent('categories.List', () => Categories);

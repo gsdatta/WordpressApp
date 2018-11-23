@@ -1,9 +1,9 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
-import {List, ListItem, Text, Icon, Body, Right} from 'native-base';
-import { Navigation } from 'react-native-navigation';
+import {Body, Icon, List, ListItem, Right, Text} from 'native-base';
+import {Navigation} from 'react-native-navigation';
 import {WP_SERVER} from '../config';
-import {WP} from '../wordpress'
+import {WP} from '../stores/wordpress'
 
 export class Categories extends React.Component {
     constructor(props) {

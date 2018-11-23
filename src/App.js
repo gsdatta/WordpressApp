@@ -5,9 +5,9 @@
  */
 import React from 'react';
 
-import { Platform } from 'react-native';
-import { registerScreens } from './screens';
-import { Navigation } from 'react-native-navigation';
+import {Platform} from 'react-native';
+import {registerScreens} from './screens';
+import {Navigation} from 'react-native-navigation';
 import Icon from "react-native-vector-icons/Ionicons";
 
 async function prepareIcons() {

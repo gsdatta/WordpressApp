@@ -1,11 +1,10 @@
 import React from 'react';
-import {ActivityIndicator, Image, ScrollView, StyleSheet, Linking} from 'react-native';
-import {Card, Text, View, Button, Icon} from 'native-base';
-import {WP} from "../wordpress";
+import {ActivityIndicator, Image, Linking, Platform, ScrollView, StyleSheet} from 'react-native';
+import {Button, Icon, Text, View} from 'native-base';
+import {WP} from "../stores/wordpress";
 import {WP_SERVER} from "../config";
 import HTML from 'react-native-render-html';
 import EvilIcons from "react-native-vector-icons/EvilIcons";
-import {Platform} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import Share from 'react-native-share';
 

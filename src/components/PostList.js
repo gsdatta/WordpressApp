@@ -1,10 +1,6 @@
 import React from 'react';
-import { ActivityIndicator, AsyncStorage, FlatList, StyleSheet, RefreshControl } from 'react-native';
-import { View, Text } from 'native-base';
-import { WP } from "../wordpress";
-import { WP_SERVER } from "../config";
-import Icon from "react-native-vector-icons/Ionicons";
-import { Navigation } from 'react-native-navigation';
+import {ActivityIndicator, FlatList, StyleSheet} from 'react-native';
+import {View} from 'native-base';
 import ListPostItem from './ListPostItem';
 
 export class PostList extends React.Component {
