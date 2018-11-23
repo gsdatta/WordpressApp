@@ -4,20 +4,41 @@ import {WP} from "../stores/wordpress";
 import {WP_SERVER} from "../config";
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
+import {PostMetadata, PostSearchParams} from "../stores/wordpress/models";
 
-export class Posts extends React.Component {
-    constructor(props) {
+
+export interface InputProps {
+    categoryId: number | undefined;
+}
+
+interface Props extends InputProps {
+    componentId: string;
+}
+
+interface State {
+    posts: PostMetadata[];
+    categoryId: number | undefined;
+    isLoadingMore: boolean;
+    canLoadMore: boolean;
+    saved: number[];
+    refreshing: boolean;
+    page: number;
+}
+
+export class Posts extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
 
         this.state = Posts._getDefaultState();
         this.goToPost = this.goToPost.bind(this);
     }
 
-    static _getDefaultState() {
+    static _getDefaultState(): State {
         return {
             posts: [],
-            categoryId: null,
+            categoryId: undefined,
             isLoadingMore: false,
+            canLoadMore: true,
             saved: [],
             refreshing: false,
             page: 1
@@ -26,14 +47,15 @@ export class Posts extends React.Component {
 
     async componentDidMount() {
         this._getPostData(this.props.categoryId);
+
         let saved = [];
         try {
-            let s = await AsyncStorage.getItem('@Swayampaaka:saved_items')
+            let s = await AsyncStorage.getItem('@Swayampaaka:saved_items');
             console.log(`Items currently saved: ${s}`);
             if (s !== null) {
                 saved = JSON.parse(s);
             }
-        } catch ( error ) {
+        } catch (error) {
             console.log(error);
         }
 
@@ -42,13 +64,15 @@ export class Posts extends React.Component {
         });
     }
 
-    _getPostData(categoryId) {
-        let params = {};
+    _getPostData(categoryId?: number) {
+        let params = new PostSearchParams();
         console.log(`Loading list of posts for category [${categoryId}]`);
 
         if (categoryId) {
-            this.state.categoryId = categoryId;
-            params.categories = categoryId;
+            this.setState({
+                categoryId: categoryId
+            });
+            params.categoryId = categoryId;
         }
 
         params.page = this.state.page;
@@ -58,6 +82,7 @@ export class Posts extends React.Component {
                 let posts = this.state.posts;
 
                 Array.prototype.push.apply(posts, cat);
+                console.log(cat);
 
                 let nextPage = this.state.page + 1;
 
@@ -92,9 +117,9 @@ export class Posts extends React.Component {
         }).catch((err) => this.setState({
             refreshing: false
         }));
-    }
+    };
 
-    goToPost = (post) => {
+    goToPost = (post: PostMetadata) => {
         console.log(`ComponentId: ${this.props.componentId}`);
         console.log(`Loading post [${post.id}]`);
         Navigation.push(this.props.componentId, {
@@ -105,9 +130,9 @@ export class Posts extends React.Component {
                 }
             }
         });
-    }
+    };
 
-    savePost = (post) => {
+    savePost = (post: PostMetadata) => {
         let posts = this.state.saved;
         if (posts.includes(post.id)) {
             posts = posts.filter(p => p !== post.id);
@@ -119,27 +144,28 @@ export class Posts extends React.Component {
         this.setState({
             saved: posts
         });
-    };    
+    };
 
     render() {
         return (
-                <PostList
-                    posts={this.state.posts}
-                    onPostPress={this.goToPost}
-                    onLike={this.savePost}
-                    isLiked={(post) => this.state.saved.includes(post.id)}
-                    onEndReached={() => {
-                        if (!this.state.isLoadingMore && this.state.canLoadMore) {
-                            this.setState({
-                                isLoadingMore: true
-                            });
-                            this._getPostData(this.state.categoryId);
-                        }
-                    }}
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh}
-                    footerLoading={this.state.isLoadingMore}
-                />
+            <PostList
+                posts={this.state.posts}
+                onPostPress={this.goToPost}
+                onLike={this.savePost}
+                isLiked={(post: PostMetadata) => this.state.saved.includes(post.id)}
+                onEndReached={() => {
+                    if (!this.state.isLoadingMore && this.state.canLoadMore) {
+                        this.setState({
+                            isLoadingMore: true
+                        });
+                        this._getPostData(this.state.categoryId);
+                    }
+                }}
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+                footerLoading={this.state.isLoadingMore}
+                showExcerpt={false}
+            />
         );
     }
 }

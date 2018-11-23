@@ -22,7 +22,7 @@ async function prepareIcons() {
     };
 }
 
-function getStandardComponent(screenName, tabText) {
+function getStandardComponent(screenName: String, tabText: String) {
   return {component: {
       name: screenName,
       options: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {ActivityIndicator, Image, Linking, Platform, ScrollView, StyleSheet} from 'react-native';
 import {Button, Icon, Text, View} from 'native-base';
-import {WP} from "../stores/wordpress";
+import {WP} from "../stores/wordpress/index";
 import {WP_SERVER} from "../config";
 import HTML from 'react-native-render-html';
 import EvilIcons from "react-native-vector-icons/EvilIcons";

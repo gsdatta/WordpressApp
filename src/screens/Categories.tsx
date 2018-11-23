@@ -1,12 +1,24 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
 import {Body, Icon, List, ListItem, Right, Text} from 'native-base';
-import {Navigation} from 'react-native-navigation';
+import {Layout, Navigation} from 'react-native-navigation';
 import {WP_SERVER} from '../config';
 import {WP} from '../stores/wordpress'
+import {Category} from "../stores/wordpress/models";
+import {InputProps as PostProps} from "./Posts";
 
-export class Categories extends React.Component {
-    constructor(props) {
+export interface Props {
+    componentId: string;
+    name: string;
+    enthusiasmLevel?: number;
+}
+
+interface State {
+    categories: Category[]
+}
+
+export class Categories extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
 
         console.log(props);
@@ -24,27 +36,27 @@ export class Categories extends React.Component {
         }).then(cat => this.setState({categories: cat}));
     }
 
-    goToPostList = (category) => {
+    goToPostList = (category: Category) => {
         console.log(`ComponentId: ${this.props.componentId}`);
         console.log(`Loading category ${category.id}`);
-        let opts = {
+        let opts: Layout<PostProps> = {
             component: {
                 name: 'posts.List',
                 passProps: {
                     'categoryId': category.id
                 },
                 options: {
-                  topBar: {
-                    title: {
-                      text: category.name
+                    topBar: {
+                        title: {
+                            text: category.name
+                        }
                     }
-                  }
                 }
             }
         };
         console.log(opts);
         Navigation.push(this.props.componentId, opts);
-    }
+    };
 
     render() {
         let categories = this.state.categories;
@@ -55,14 +67,15 @@ export class Categories extends React.Component {
                     return (
                         <ListItem key={category.id} onPress={() => this.goToPostList(category)} icon>
                             <Body>
-                                <Text>{category.name}</Text>
+                            <Text>{category.name}</Text>
                             </Body>
                             <Right>
                                 <Text>{category.count}</Text>
-                                <Icon active name="arrow-forward" />
+                                <Icon active name="arrow-forward"/>
                             </Right>
                         </ListItem>
-                    );}}>
+                    );
+                }}>
                 </List>
             </ScrollView>
         );

@@ -2,11 +2,19 @@ import React from 'react';
 import {Body, Card, CardItem, Col, Grid, Text} from 'native-base';
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
-import HTML from 'react-native-render-html';
+import HTML from "react-native-render-html";
+import {Category, PostMetadata} from "../stores/wordpress/models";
 
+interface Props {
+    post: PostMetadata;
+    onPress: (post: PostMetadata) => void;
+    onLike: (post: PostMetadata) => void;
+    isLiked: (post: PostMetadata) => boolean;
+    showExcerpt: boolean;
+}
 
-export default class ListPostItem extends React.Component {
-    constructor(props) {
+export class ListPostItem extends React.Component<Props> {
+    constructor(props: Props) {
         super(props);
     }
 
@@ -31,7 +39,7 @@ export default class ListPostItem extends React.Component {
                         
                         <Body style={{marginLeft: 20}}>
                             <Text>{post.name}</Text>
-                            {showExcerpt ? (<HTML html={post.excerpt}/>) : null }
+                            {showExcerpt ? (<HTML html={post.excerpt ? post.excerpt : ''}/>) : null }
                             <Grid>
                                 <Col size={80}>
                                     <Text style={styles.date}>{post.posted_date.toDateString()}</Text>

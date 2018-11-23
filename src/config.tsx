@@ -1,0 +1,1 @@
+export const WP_SERVER: string = 'https://swayampaaka.com/wp-json/wp/v2';
