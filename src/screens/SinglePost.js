@@ -35,7 +35,7 @@ export class SinglePost extends React.Component {
   	}
 
     async componentDidMount() {
-        this._getPostData(this.props.postId);
+        await this._getPostData(this.props.postId);
         
        	let options = await this.buttonOptions();
        	Navigation.mergeOptions(this.props.componentId, options);

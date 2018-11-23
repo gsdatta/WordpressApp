@@ -134,6 +134,7 @@ export class Posts extends React.Component {
             return (
                 <ListView
                     style={{padding: 10}}
+                    contentContainerStyle={{justifyContent: 'center'}}
                     dataSource={this.state.dataSource}
                     refreshControl={
                       <RefreshControl

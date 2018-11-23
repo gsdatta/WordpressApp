@@ -12,8 +12,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 async function prepareIcons() {
     const icons = await Promise.all([
-        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-home' : 'material-home', 20),
-        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-folder-open' : 'material-folder', 20)
+        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-home' : 'md-home', 20),
+        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-folder-open' : 'md-folder', 20)
     ]);
     const [home, categories] = icons;
     return {home, categories};
@@ -22,25 +22,14 @@ async function prepareIcons() {
 
 export default async function start() {
   console.log("STARTING UP");
-    registerScreens();
-    let icons = await prepareIcons()
-    console.log("ICONS READY");
-    const tabs = [
-        {
-            label: 'Latest',
-            screen: 'posts.List',
-            title: 'Latest Recipes',
-            icon: icons.home
-        },
-        {
-            label: 'Categories',
-            screen: 'categories.List',
-            title: 'Recipe Categories',
-            icon: icons.categories
-        }
-    ];
     Navigation.events().registerAppLaunchedListener(() => {
       console.log("APP LAUNCHING!!");
+
+      registerScreens();
+      prepareIcons().then((icons) => {
+        console.log("ICONS READY");
+
+      
         Navigation.setRoot({
           root: {
             bottomTabs: {
@@ -98,5 +87,5 @@ export default async function start() {
             }
           }
         });
-    });
+    }); });
 }

@@ -1,15 +1,13 @@
 package com.spaaka;
 
+import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
-import com.facebook.soloader.SoLoader;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.reactnativenavigation.react.ReactGateway;
-import com.facebook.react.BuildConfig;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +28,7 @@ public class MainApplication extends NavigationApplication {
 
     @Override
     public boolean isDebug() {
-        return BuildConfig.DEBUG;
+        return true;
     }
 
     protected List<ReactPackage> getPackages() {
