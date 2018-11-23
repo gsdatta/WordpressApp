@@ -23,24 +23,21 @@ async function prepareIcons() {
 }
 
 function getStandardComponent(screenName, tabText) {
-    return {
-        component: {
-            name: screenName,
-            options: {
-                topBar: {
-                    visible: true,
-                    title: {
-                        text: tabText
-                    }
-                },
-                background: {
-                    translucent: true,
-                    blur: true
-                },
-                drawBehind: true
-            }
-        }
-    }
+  return {component: {
+      name: screenName,
+      options: {
+          topBar: {
+              visible: true,
+              title: {
+                  text: tabText
+              }
+          },
+          background: {
+            translucent: true
+          },
+          drawBehind: true
+      }
+  }}
 }
 
 export default async function start() {
@@ -59,7 +56,7 @@ export default async function start() {
                             stack: {
                                 id: 'latestRecipes',
                                 children: [
-                                    getStandardComponent('posts.List', 'Latest Recipes')
+                                  getStandardComponent('posts.List', 'Latest Recipes')
                                 ],
                                 options: {
                                     bottomTab: {
@@ -68,7 +65,7 @@ export default async function start() {
                                         selectedIconColor: 'blue',
                                     },
                                     bottomTabs: {
-                                        titleDisplayMode: 'alwaysShow',
+                                        titleDisplayMode: 'alwaysShow'
                                     },
                                 }
                             }
@@ -76,7 +73,7 @@ export default async function start() {
                             {
                                 stack: {
                                     children: [
-                                        getStandardComponent('categories.List', 'Categories'),
+                                      getStandardComponent('categories.List', 'Categories'),
                                     ],
                                     options: {
                                         bottomTab: {

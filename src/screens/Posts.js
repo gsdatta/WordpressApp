@@ -120,16 +120,19 @@ export class Posts extends React.Component {
                 posts = posts.filter(p => p !== post.id);
             } else {
                 posts.push(post.id);
-                AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts)).then(s => console.log(s)).catch(e => console.log(e));
             }
+
+            AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts)).then(s => console.log(s)).catch(e => console.log(e));
             this.setState({
                 saved: posts
             });
         };
 
         return (
-            <View style={styles.container}>
+            // <View style={styles.container}>
                 <FlatList
+                    style={styles.list}
+                    contentContainerStyle={styles.container}
                     showsVerticalScrollIndicator={false}
                     data={this.state.posts}
                     renderItem={({item}) => {
@@ -163,23 +166,18 @@ export class Posts extends React.Component {
                         );
                     }}
                 />
-            </View>
+            // </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    listItem: {
-        flex: 1,
-        flexDirection: "row",
-        flexWrap: 'wrap',
-        borderBottomWidth: 1,
-        borderBottomColor: "#d6d7da",
-        padding: 20,
-        margin: 3
+    list: {
+        marginLeft: 10,
+        marginRight: 10
     },
     container: {
-        paddingLeft: 10,
-        paddingRight: 10
+        paddingBottom: 10,
+        paddingTop: 10
     }
 });
