@@ -68,7 +68,7 @@ export class SinglePost extends React.Component {
         if (this.state.isLoading || this.state.post === null) {
             return (
                 <View style={styles.container}>
-                    <Text style={{textAlign: 'center', marginBottom: 10}}>Loading posts...</Text>
+                    <Text style={{textAlign: 'center', marginBottom: 10}}>Loading post...</Text>
                     <ActivityIndicator size="large" color="#0000ff"/>
                 </View>
             )
