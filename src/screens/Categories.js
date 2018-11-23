@@ -1,6 +1,6 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
-import {List, ListItem, Text} from 'native-base';
+import {List, ListItem, Text, Icon, Body, Right} from 'native-base';
 import { Navigation } from 'react-native-navigation';
 import {WP_SERVER} from '../config';
 import {WP} from '../wordpress'
@@ -51,12 +51,18 @@ export class Categories extends React.Component {
 
         return (
             <ScrollView>
-                <List>
-                    {categories.map((category) =>
-                        <ListItem key={category.id} onPress={() => this.goToPostList(category)}>
-                            <Text>{category.name} ({category.count})</Text>
+                <List dataArray={categories} renderRow={(category) => {
+                    return (
+                        <ListItem key={category.id} onPress={() => this.goToPostList(category)} icon>
+                            <Body>
+                                <Text>{category.name}</Text>
+                            </Body>
+                            <Right>
+                                <Text>{category.count}</Text>
+                                <Icon active name="arrow-forward" />
+                            </Right>
                         </ListItem>
-                    )}
+                    );}}>
                 </List>
             </ScrollView>
         );

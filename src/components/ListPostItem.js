@@ -43,11 +43,10 @@ export default class ListPostItem extends React.Component {
                 ) : null }
                 <CardItem>
                     <Grid>
-                        <Col>
-                            <Text style={styles.date}>Posted
-                                on: {post.posted_date.toDateString()}</Text>
+                        <Col size={80}>
+                            <Text style={styles.date}>Posted on: {post.posted_date.toDateString()}</Text>
                         </Col>
-                        <Col>
+                        <Col size={20}>
                             <TouchableOpacity
                                 onPress={() => {
                                     return onLike(post);
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
     date: {
         color: 'gray',
         fontSize: 12,
-        textAlign: 'right',
+        textAlign: 'left',
         marginTop: 4
     }
 });

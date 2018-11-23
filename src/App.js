@@ -69,10 +69,6 @@ export default async function start() {
                                     },
                                     bottomTabs: {
                                         titleDisplayMode: 'alwaysShow',
-                                        background: {
-                                          translucent: true
-                                        },
-                                        drawBehind: true
                                     },
                                 }
                             }
