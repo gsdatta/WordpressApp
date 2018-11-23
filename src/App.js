@@ -65,7 +65,8 @@ export default async function start() {
                   options: {
                     bottomTab: {
                       text: 'Latest',
-                      icon: icons.home
+                      icon: icons.home,
+                      selectedIconColor: 'blue',
                     }
                   }
                 }
@@ -88,7 +89,8 @@ export default async function start() {
                   options: {
                     bottomTab: {
                       text: 'Categories',
-                      icon: icons.categories
+                      icon: icons.categories,
+                      selectedIconColor: 'blue',
                     }
                   }
                 }
@@ -97,8 +99,4 @@ export default async function start() {
           }
         });
     });
-    // Navigation.startTabBasedApp({
-    //     tabs,
-    //     animationType: Platform.OS === 'ios' ? 'slide-down' : 'fade',
-    // });
 }

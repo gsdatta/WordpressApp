@@ -1,6 +1,6 @@
 import React from 'react';
 import {Body, Card, CardItem, Col, Grid, Text, View} from 'native-base';
-import Icon from "react-native-vector-icons/Ionicons";
+import Icon from "react-native-vector-icons/FontAwesome";
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import HTML from 'react-native-render-html';
 
@@ -54,8 +54,8 @@ export default class ListPostItem extends React.Component {
                                 }}
                                 activeOpacity={0.5}>
                                 <Icon
-                                    name={isLiked(post) ? 'ios-heart' : 'ios-heart-outline'}
-                                    size={20} style={{textAlign: 'right'}}
+                                    name={isLiked(post) ? 'bookmark' : 'bookmark-o'}
+                                    size={20} style={{textAlign: 'right', paddingTop: 3}}
                                     color={'red'}/>
                             </TouchableOpacity>
                         </Col>
@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
     },
     date: {
         color: 'gray',
-        fontSize: 11,
+        fontSize: 12,
         textAlign: 'right',
-        marginTop: 10
+        marginTop: 4
     }
 });

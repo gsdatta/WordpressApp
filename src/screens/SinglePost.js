@@ -1,10 +1,10 @@
 import React from 'react';
-import {ActivityIndicator, Image, ScrollView, StyleSheet} from 'react-native';
-import {Card, Text, View} from 'native-base';
+import {ActivityIndicator, Image, ScrollView, StyleSheet, Linking} from 'react-native';
+import {Card, Text, View, Button, Icon} from 'native-base';
 import {WP} from "../wordpress";
 import {WP_SERVER} from "../config";
 import HTML from 'react-native-render-html';
-import Icon from "react-native-vector-icons/EvilIcons";
+import EvilIcons from "react-native-vector-icons/EvilIcons";
 import {Platform} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import Share from 'react-native-share';
@@ -21,9 +21,9 @@ export class SinglePost extends React.Component {
             height: 0
         };
     }
-
+    
     async buttonOptions() {
-    	let shareIcon = await Icon.getImageSource(`share-${Platform.OS === 'ios' ? 'apple' : 'google'}`, 30)
+    	let shareIcon = await EvilIcons.getImageSource(`share-${Platform.OS === 'ios' ? 'apple' : 'google'}`, 30)
 	    return {
 	      topBar: {
 	        rightButtons: {
@@ -50,22 +50,18 @@ export class SinglePost extends React.Component {
     	}
   	}
 
-    _getPostData(postId) {
-        console.log(postId);
-        new WP(WP_SERVER).post(postId)
-            .then(p => {
-                console.log(p);
-                return p
-            })
-            .then(p => {
-                this.setState({
-                    post: p,
-                    isLoading: false
-                });
-            })
-            .catch(err => {
-                console.log(err);
-            });
+    async _getPostData(postId) {
+        console.log(`Fetching post ${postId}`);
+        try {
+	        let post = await new WP(WP_SERVER).post(postId);
+	        this.setState({
+	            post: post
+	        });
+	    } catch (err) {
+	    	console.log(err);
+	    }
+
+	    this.setState({isLoading: false});
     }
 
     render() {
@@ -89,10 +85,18 @@ export class SinglePost extends React.Component {
                                        headers: {'User-Agent': 'Mozilla/5.0'}
                                    }}
                                    resizeMode={'cover'}/>
-                        <Text style={{marginTop: 10, fontWeight: 'bold', fontSize: 20}}>{post.name}</Text>
-                        <Text style={styles.date}>Posted on: {post.posted_date.toDateString()}</Text>
                     </View>
-                    <HTML html={post.post_content}/>
+                    <View style={{padding: 20}} >
+	                    <Text style={{marginTop: 10, fontWeight: 'bold', fontSize: 20}}>{post.name}</Text>
+	                    <Text style={styles.date}>Posted on: {post.posted_date.toDateString()}</Text>
+	                    {this.state.post.video_url ? (
+		                    <Button block iconRight danger onPress={() => Linking.openURL(this.state.post.video_url) }>
+		                    	<Text>Watch this on YouTube</Text>
+		                    	<Icon type='FontAwesome' name='youtube-play' />
+		                    </Button>
+	                    ) : null}
+	                    <HTML html={post.post_content}/>
+                    </View>
                 </ScrollView>
             );
         }
@@ -110,8 +114,8 @@ const styles = StyleSheet.create({
     },
     date: {
         color: 'gray',
-        fontSize: 11,
-        textAlign: 'right',
-        marginTop: 10
+        fontSize: 12,
+        textAlign: 'left',
+        margin: 10
     }
 });

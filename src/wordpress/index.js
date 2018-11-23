@@ -40,7 +40,7 @@ export class WP {
 
         let data = await this.getURL(url);
         let json = await data.json();
-        return json.map(p => new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.link, p.excerpt.rendered));
+        return json.map(p => new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.link, p.featured_video, p.excerpt.rendered));
     }
 
     post(id) {
@@ -48,7 +48,7 @@ export class WP {
 
         return this.getURL(url)
             .then(res => res.json())
-            .then(p => new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.link, p.excerpt.rendered, p.content.rendered))
+            .then(p => new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.link, p.featured_video, p.excerpt.rendered, p.content.rendered))
             .then(p => {console.log(p); return p});
 
     }
