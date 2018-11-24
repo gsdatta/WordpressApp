@@ -5,6 +5,7 @@ import {WP_SERVER} from "../config";
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
 import {PostMetadata} from "../stores/wordpress/models";
+import {Bookmarks} from "../stores/bookmarks";
 
 
 export interface InputProps {
@@ -75,33 +76,21 @@ export class Saved extends React.Component<Props, State> {
     };
 
     async onRefresh() {
-        let saved = [];
         this.setState({saved: []});
-        try {
-            let s = await AsyncStorage.getItem('@Swayampaaka:saved_items');
-            console.log(`Items currently saved: ${s}`);
-            if (s !== null) {
-                saved = JSON.parse(s);
-            }
-
-            this._getPostData(saved);
-        } catch (error) {
-            console.log(error);
-        }
+        let saved = await Bookmarks.getSavedPosts();
+        this._getPostData(saved);
     }
 
     savePost = (post: PostMetadata) => {
-        // let posts = this.state.saved;
-        // if (posts.includes(post.id)) {
-        //     posts = posts.filter(p => p !== post.id);
-        // } else {
-        //     posts.push(post.id);
-        // }
-        //
-        // AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts)).then(s => console.log(s)).catch(e => console.log(e));
-        // this.setState({
-        //     saved: posts
-        // });
+
+    };
+
+    unlikePost = (post: PostMetadata) => {
+        this.setState((state: State) => {
+            return {
+                saved: state.saved.filter(p => p.id != post.id)
+            }
+        })
     };
 
     render() {
@@ -109,8 +98,7 @@ export class Saved extends React.Component<Props, State> {
             <PostList
                 posts={this.state.saved}
                 onPostPress={this.goToPost}
-                onLike={this.savePost}
-                isLiked={(post: PostMetadata) => true}
+                onUnlike={this.unlikePost}
                 onEndReached={() => {
                 }}
                 refreshing={false}

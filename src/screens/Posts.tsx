@@ -133,22 +133,11 @@ export class Posts extends React.Component<Props, State> {
         });
     };
 
-    savePost = (post: PostMetadata) => {
-        Bookmarks.savePost(post.id).then(posts => this.setState({saved: posts}));
-    };
-
-    unsavePost = (post: PostMetadata) => {
-        Bookmarks.removePost(post.id).then(posts => this.setState({saved: posts}));
-    };
-
     render() {
         return (
             <PostList
                 posts={this.state.posts}
                 onPostPress={this.goToPost}
-                onLike={this.savePost}
-                onUnlike={this.unsavePost}
-                isLiked={(post: PostMetadata) => this.state.saved.includes(post.id)}
                 onEndReached={() => {
                     if (!this.state.isLoadingMore && this.state.canLoadMore) {
                         this.setState({
