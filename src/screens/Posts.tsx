@@ -5,6 +5,7 @@ import {WP_SERVER} from "../config";
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
 import {PostMetadata, PostSearchParams} from "../stores/wordpress/models";
+import {removePost, savePost} from "../stores/bookmarks";
 
 
 export interface InputProps {
@@ -133,17 +134,11 @@ export class Posts extends React.Component<Props, State> {
     };
 
     savePost = (post: PostMetadata) => {
-        let posts = this.state.saved;
-        if (posts.includes(post.id)) {
-            posts = posts.filter(p => p !== post.id);
-        } else {
-            posts.push(post.id);
-        }
+        savePost(post.id).then(posts => this.setState({saved: posts}));
+    };
 
-        AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts)).then(s => console.log(s)).catch(e => console.log(e));
-        this.setState({
-            saved: posts
-        });
+    unsavePost = (post: PostMetadata) => {
+        removePost(post.id).then(posts => this.setState({saved: posts}));
     };
 
     render() {
@@ -152,6 +147,7 @@ export class Posts extends React.Component<Props, State> {
                 posts={this.state.posts}
                 onPostPress={this.goToPost}
                 onLike={this.savePost}
+                onUnlike={this.unsavePost}
                 isLiked={(post: PostMetadata) => this.state.saved.includes(post.id)}
                 onEndReached={() => {
                     if (!this.state.isLoadingMore && this.state.canLoadMore) {

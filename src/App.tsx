@@ -7,7 +7,7 @@ import React from 'react';
 
 import {Platform} from 'react-native';
 import {registerScreens} from './screens';
-import {Navigation} from 'react-native-navigation';
+import {Layout, Navigation} from 'react-native-navigation';
 import Icon from "react-native-vector-icons/Ionicons";
 
 async function prepareIcons() {
@@ -24,7 +24,7 @@ async function prepareIcons() {
     };
 }
 
-function getStandardComponent(screenName: String, tabText: String) {
+function getStandardComponent(screenName: string, tabText: string): Layout {
     return {
         component: {
             name: screenName,
@@ -33,12 +33,12 @@ function getStandardComponent(screenName: String, tabText: String) {
                     visible: true,
                     title: {
                         text: tabText
-                    }
-                },
-                background: {
-                    translucent: true
-                },
-                drawBehind: true
+                    },
+                    background: {
+                        translucent: true
+                    },
+                    drawBehind: true
+                }
             }
         }
     }
@@ -69,7 +69,9 @@ export default async function start() {
                                         selectedIconColor: 'blue',
                                     },
                                     bottomTabs: {
-                                        titleDisplayMode: 'alwaysShow'
+                                        titleDisplayMode: 'alwaysShow',
+                                        translucent: true,
+                                        drawBehind: true
                                     },
                                 }
                             }
@@ -86,7 +88,9 @@ export default async function start() {
                                             selectedIconColor: 'blue',
                                         },
                                         bottomTabs: {
-                                            titleDisplayMode: 'alwaysShow'
+                                            titleDisplayMode: 'alwaysShow',
+                                            translucent: true,
+                                            drawBehind: true
                                         }
                                     }
                                 }
@@ -103,7 +107,9 @@ export default async function start() {
                                             selectedIconColor: 'blue',
                                         },
                                         bottomTabs: {
-                                            titleDisplayMode: 'alwaysShow'
+                                            titleDisplayMode: 'alwaysShow',
+                                            translucent: true,
+                                            drawBehind: true
                                         }
                                     }
                                 }

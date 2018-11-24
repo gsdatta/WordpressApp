@@ -8,6 +8,7 @@ interface Props {
     posts: PostMetadata[];
     onPostPress: (post: PostMetadata) => void;
     onLike: (post: PostMetadata) => void;
+    onUnlike: (post: PostMetadata) => void;
     isLiked: (post: PostMetadata) => boolean;
     showExcerpt: boolean;
     onEndReached: () => void;
@@ -38,6 +39,7 @@ export class PostList extends React.Component<Props> {
                             post={item}
                             onPress={(post) => this.props.onPostPress(post)}
                             onLike={(post) => this.props.onLike(post)}
+                            onUnlike={(post) => this.props.onUnlike(post)}
                             isLiked={(post) => this.props.isLiked(post)}
                             showExcerpt={this.props.showExcerpt}/>
                     );

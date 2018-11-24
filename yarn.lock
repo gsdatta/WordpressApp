@@ -978,6 +978,11 @@
   dependencies:
     react-native-navigation "*"
 
+"@types/react-native-share@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-share/-/react-native-share-1.1.0.tgz#213448573a725381edc052eca1a1bb92c137fb93"
+  integrity sha512-MOPKRvrQdznZTOE2x4ZDqYBQAaISRD6EWSiEYdW7Jvy4SOhf0lr+WgVvaKPgEDaNEpQmP0ER5Ebm7JLexzzS8A==
+
 "@types/react-native-vector-icons@^4.6.4":
   version "4.6.4"
   resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-4.6.4.tgz#83c2d88f0c2615a44b9059eb75c11f92702c1ee2"

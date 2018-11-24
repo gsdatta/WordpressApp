@@ -21,6 +21,7 @@
     "@types/react": "^16.7.7",
     "@types/react-native": "^0.57.13",
     "@types/react-native-navigation": "^2.0.0",
+    "@types/react-native-share": "^1.1.0",
     "@types/react-native-vector-icons": "^4.6.4",
     "@types/url-search-params": "^0.10.2",
     "babel-jest": "22.4.3",

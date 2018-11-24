@@ -9,6 +9,7 @@ interface Props {
     post: PostMetadata;
     onPress: (post: PostMetadata) => void;
     onLike: (post: PostMetadata) => void;
+    onUnlike: (post: PostMetadata) => void;
     isLiked: (post: PostMetadata) => boolean;
     showExcerpt: boolean;
 }
@@ -47,7 +48,11 @@ export class ListPostItem extends React.Component<Props> {
                                 <Col size={20}>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            return onLike(post);
+                                            if (isLiked(post)) {
+                                                this.props.onUnlike(post);
+                                            } else {
+                                                return onLike(post);
+                                            }
                                         }}
                                         activeOpacity={0.5}>
                                         <Icon
