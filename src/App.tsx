@@ -13,31 +13,35 @@ import Icon from "react-native-vector-icons/Ionicons";
 async function prepareIcons() {
     const icons = await Promise.all([
         Icon.getImageSource(Platform.OS === 'ios' ? 'ios-home' : 'md-home', 20),
-        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-folder-open' : 'md-folder', 20)
+        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-folder-open' : 'md-folder', 20),
+        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-bookmark' : 'md-bookmark', 20)
     ]);
-    const [home, categories] = icons;
+    const [home, categories, bookmarks] = icons;
     return {
         home,
-        categories
+        categories,
+        bookmarks
     };
 }
 
 function getStandardComponent(screenName: String, tabText: String) {
-  return {component: {
-      name: screenName,
-      options: {
-          topBar: {
-              visible: true,
-              title: {
-                  text: tabText
-              }
-          },
-          background: {
-            translucent: true
-          },
-          drawBehind: true
-      }
-  }}
+    return {
+        component: {
+            name: screenName,
+            options: {
+                topBar: {
+                    visible: true,
+                    title: {
+                        text: tabText
+                    }
+                },
+                background: {
+                    translucent: true
+                },
+                drawBehind: true
+            }
+        }
+    }
 }
 
 export default async function start() {
@@ -56,7 +60,7 @@ export default async function start() {
                             stack: {
                                 id: 'latestRecipes',
                                 children: [
-                                  getStandardComponent('posts.List', 'Latest Recipes')
+                                    getStandardComponent('posts.List', 'Latest Recipes')
                                 ],
                                 options: {
                                     bottomTab: {
@@ -73,7 +77,7 @@ export default async function start() {
                             {
                                 stack: {
                                     children: [
-                                      getStandardComponent('categories.List', 'Categories'),
+                                        getStandardComponent('categories.List', 'Categories'),
                                     ],
                                     options: {
                                         bottomTab: {
@@ -86,7 +90,25 @@ export default async function start() {
                                         }
                                     }
                                 }
-                            }]
+                            },
+                            {
+                                stack: {
+                                    children: [
+                                        getStandardComponent('posts.Saved', 'Saved'),
+                                    ],
+                                    options: {
+                                        bottomTab: {
+                                            text: 'Saved',
+                                            icon: icons.bookmarks,
+                                            selectedIconColor: 'blue',
+                                        },
+                                        bottomTabs: {
+                                            titleDisplayMode: 'alwaysShow'
+                                        }
+                                    }
+                                }
+                            }
+                        ]
                     }
                 }
             });
