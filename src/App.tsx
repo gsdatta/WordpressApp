@@ -14,34 +14,49 @@ async function prepareIcons() {
     const icons = await Promise.all([
         Icon.getImageSource(Platform.OS === 'ios' ? 'ios-home' : 'md-home', 20),
         Icon.getImageSource(Platform.OS === 'ios' ? 'ios-folder-open' : 'md-folder', 20),
-        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-bookmark' : 'md-bookmark', 20)
+        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-bookmark' : 'md-bookmark', 20),
+        Icon.getImageSource(Platform.OS === 'ios' ? 'ios-search' : 'md-search', 20)
     ]);
-    const [home, categories, bookmarks] = icons;
+    const [home, categories, bookmarks, search] = icons;
     return {
         home,
         categories,
-        bookmarks
+        bookmarks,
+        search
     };
 }
 
-function getStandardComponent(screenName: string, tabText: string): Layout {
-    return {
+function getStandardComponent(screenName: string, tabText: string, topVisible: boolean = true, drawBehind: boolean = Platform.OS === "ios"): Layout {
+    let layout: Layout = {
         component: {
             name: screenName,
             options: {
                 topBar: {
-                    visible: true,
+                    visible: topVisible,
+                    drawBehind: drawBehind,
                     title: {
                         text: tabText
                     },
-                    background: {
-                        translucent: true
-                    },
+                },
+                bottomTabs: {
+                    translucent: true,
                     drawBehind: true
                 }
             }
         }
+    };
+
+    if (Platform.OS === 'ios') {
+        Object.assign(layout!.component!.options!.topBar, {
+            background: {
+                translucent: true
+            },
+        });
     }
+
+    console.log(layout);
+
+    return layout;
 }
 
 export default async function start() {
@@ -113,6 +128,26 @@ export default async function start() {
                                         }
                                     }
                                 }
+                            },
+                            {
+                                stack: {
+                                    children: [
+                                        getStandardComponent('posts.Search', 'Search', false, true)
+                                    ],
+                                    options: {
+                                        bottomTab: {
+                                            text: 'Search',
+                                            icon: icons.search,
+                                            selectedIconColor: 'blue',
+                                        },
+                                        bottomTabs: {
+                                            titleDisplayMode: 'alwaysShow',
+                                            translucent: true,
+                                            drawBehind: true
+                                        }
+                                    }
+                                }
+
                             }
                         ]
                     }

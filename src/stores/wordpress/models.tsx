@@ -12,6 +12,7 @@ export class Category {
 
 export class PostSearchParams {
     categoryId: number | undefined;
+    search?: string;
     page: number = 1;
 }
 
