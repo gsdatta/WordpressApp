@@ -86,7 +86,7 @@ export default async function start() {
                                     bottomTabs: {
                                         titleDisplayMode: 'alwaysShow',
                                         translucent: true,
-                                        drawBehind: true
+                                        // drawBehind: true
                                     },
                                 }
                             }
@@ -105,7 +105,7 @@ export default async function start() {
                                         bottomTabs: {
                                             titleDisplayMode: 'alwaysShow',
                                             translucent: true,
-                                            drawBehind: true
+                                            drawBehind: Platform.OS === "ios"
                                         }
                                     }
                                 }
@@ -124,7 +124,7 @@ export default async function start() {
                                         bottomTabs: {
                                             titleDisplayMode: 'alwaysShow',
                                             translucent: true,
-                                            drawBehind: true
+                                            drawBehind: Platform.OS === "ios"
                                         }
                                     }
                                 }
@@ -143,7 +143,7 @@ export default async function start() {
                                         bottomTabs: {
                                             titleDisplayMode: 'alwaysShow',
                                             translucent: true,
-                                            drawBehind: true
+                                            drawBehind: Platform.OS === "ios"
                                         }
                                     }
                                 }
