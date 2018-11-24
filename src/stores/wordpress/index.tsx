@@ -22,36 +22,13 @@ export class WP {
             .then((json: any) => json.map((c: any) => new Category(c.id, c.name, c.count)));
     }
 
-    // async search(query: string): Promise<PostMetadata[]> {
-    // }
+    async search(query: string): Promise<PostMetadata[]> {
+        return this._getPosts({search: query});
+    }
+
     async posts(params: PostSearchParams): Promise<PostMetadata[]> {
-        let url = `${this.url}/posts`;
         console.log(params);
-
-        if (params) {
-            let urlParams = new URLSearchParams();
-
-            if (params.categoryId) {
-                urlParams.append('categories', params.categoryId);
-            }
-
-            if (params.page) {
-                urlParams.append('page', params.page);
-            }
-
-            if (params.search) {
-                urlParams.append('search', params.search);
-            }
-
-            const queryString = urlParams.toString();
-            url += `?${queryString}`;
-        }
-
-        console.log(url);
-
-        let data = await this.getURL(url);
-        let json = await data.json();
-        return json.map(this._mapJsonToPost);
+        return this._getPosts(params);
     }
 
     post(id: number): Promise<PostMetadata> {
@@ -62,22 +39,22 @@ export class WP {
             .then(this._mapJsonToPost);
     }
 
-    // async _getPosts(params: {categories?: string, page?: number, search?: string}): Promise<PostMetadata[]> {
-    //     let url = `${this.url}/posts`;
-    //     let urlParam = new URLSearchParams();
-    //
-    //     for (let p in params) {
-    //         if (params) {
-    //
-    //         }
-    //     }
-    //
-    //     console.log(url);
-    //
-    //     let data = await this.getURL(url);
-    //     let json = await data.json();
-    //     return json.map(this._mapJsonToPost);
-    // }
+    async _getPosts(params: any): Promise<PostMetadata[]> {
+        let url = `${this.url}/posts`;
+        let urlParam = new URLSearchParams();
+
+        for (let p in params) {
+            if (params[p]) {
+                urlParam.append(p, params[p]);
+            }
+        }
+
+        console.log(url);
+
+        let data = await this.getURL(url);
+        let json = await data.json();
+        return json.map(this._mapJsonToPost);
+    }
 
     _mapJsonToPost(p: any): PostMetadata {
         return new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.link, p.featured_video, p.excerpt.rendered, p.content.rendered);
