@@ -1,36 +1,39 @@
 import {AsyncStorage} from "react-native";
 
-export async function removePost(postId: number): Promise<number[]> {
-    let posts = await getSavedPosts();
-
-    return savePosts(posts.filter(p => p !== postId));
-}
-
-export async function savePost(postId: number): Promise<number[]> {
-    let posts = await getSavedPosts();
-    if (posts.includes(postId)) {
-        return posts;
+export class Bookmarks {
+    static async removePost(postId: number): Promise<number[]> {
+        let posts = await Bookmarks.getSavedPosts();
+        return Bookmarks.savePosts(posts.filter(p => p !== postId));
     }
 
-    return savePosts(posts.concat(postId));
-}
+    static async savePost(postId: number): Promise<number[]> {
+        let posts = await Bookmarks.getSavedPosts();
+        if (posts.includes(postId)) {
+            return posts;
+        }
 
-export async function getSavedPosts(): Promise<number[]> {
-    let postString = await AsyncStorage.getItem('@Swayampaaka:saved_items');
-
-    if (postString == null) {
-        return [];
+        return Bookmarks.savePosts(posts.concat(postId));
     }
 
-    return JSON.parse(postString);
-}
+    static async getSavedPosts(): Promise<number[]> {
+        let postString = await AsyncStorage.getItem('@Swayampaaka:saved_items');
 
-export async function savePosts(posts: number[]): Promise<number[]> {
-    try {
-        AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts));
-        return posts;
-    } catch (error) {
-        console.log(error);
-        return error;
+        if (postString == null) {
+            return [];
+        }
+
+        return JSON.parse(postString);
+    }
+
+    static async savePosts(posts: number[]): Promise<number[]> {
+        try {
+            AsyncStorage.setItem('@Swayampaaka:saved_items', JSON.stringify(posts));
+            return posts;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
     }
 }
+
+

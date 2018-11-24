@@ -5,7 +5,7 @@ import {WP_SERVER} from "../config";
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
 import {PostMetadata, PostSearchParams} from "../stores/wordpress/models";
-import {removePost, savePost} from "../stores/bookmarks";
+import {Bookmarks} from "../stores/bookmarks";
 
 
 export interface InputProps {
@@ -134,11 +134,11 @@ export class Posts extends React.Component<Props, State> {
     };
 
     savePost = (post: PostMetadata) => {
-        savePost(post.id).then(posts => this.setState({saved: posts}));
+        Bookmarks.savePost(post.id).then(posts => this.setState({saved: posts}));
     };
 
     unsavePost = (post: PostMetadata) => {
-        removePost(post.id).then(posts => this.setState({saved: posts}));
+        Bookmarks.removePost(post.id).then(posts => this.setState({saved: posts}));
     };
 
     render() {
