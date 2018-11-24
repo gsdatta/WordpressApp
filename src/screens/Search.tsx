@@ -1,7 +1,7 @@
 import React from 'react';
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
-import {PostMetadata} from "../stores/wordpress/models";
+import {PostMetadata, PostSearchParams} from "../stores/wordpress/models";
 import {Container, Header, Icon, Input, Item, Text} from "native-base";
 import {WP} from "../stores/wordpress";
 import {WP_SERVER} from "../config";
@@ -56,7 +56,10 @@ export class Search extends React.Component<Props, State> {
     };
 
     onSubmit = (query: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
-        new WP(WP_SERVER).search(query.nativeEvent.text).then((posts) => {
+        let params = new PostSearchParams();
+        params.search = query.nativeEvent.text;
+
+        new WP(WP_SERVER).posts(params).then((posts) => {
             this.setState({
                 posts: posts
             });

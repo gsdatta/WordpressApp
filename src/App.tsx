@@ -40,7 +40,7 @@ function getStandardComponent(screenName: string, tabText: string, topVisible: b
                 },
                 bottomTabs: {
                     translucent: true,
-                    drawBehind: true
+                    drawBehind: Platform.OS === "ios"
                 }
             }
         }

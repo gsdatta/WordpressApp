@@ -27,8 +27,33 @@ export class WP {
     }
 
     async posts(params: PostSearchParams): Promise<PostMetadata[]> {
+        let url = `${this.url}/posts`;
         console.log(params);
-        return this._getPosts(params);
+
+        if (params) {
+            let urlParams = new URLSearchParams();
+
+            if (params.categoryId) {
+                urlParams.append('categories', params.categoryId);
+            }
+
+            if (params.page) {
+                urlParams.append('page', params.page);
+            }
+
+            if (params.search) {
+                urlParams.append('search', params.search);
+            }
+
+            const queryString = urlParams.toString();
+            url += `?${queryString}`;
+        }
+
+        console.log(url);
+
+        let data = await this.getURL(url);
+        let json = await data.json();
+        return json.map(this._mapJsonToPost);
     }
 
     post(id: number): Promise<PostMetadata> {

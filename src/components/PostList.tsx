@@ -46,9 +46,9 @@ export class PostList extends React.Component<Props, State> {
 
 
     componentWillUnmount(): void {
-        // if (this.bookmarkSubscription) {
-        //     PubSub.unsubscribe(this.bookmarkSubscription);
-        // }
+        if (this.bookmarkSubscription) {
+            PubSub.unsubscribe(this.bookmarkSubscription);
+        }
     }
 
     savePost = (post: PostMetadata) => {
