@@ -3,7 +3,8 @@ import {ActivityIndicator, FlatList, StyleSheet} from 'react-native';
 import {View} from 'native-base';
 import {ListPostItem} from './ListPostItem';
 import {PostMetadata} from "../stores/wordpress/models";
-import {Bookmarks} from "../stores/bookmarks";
+import {BookmarkMessage, Bookmarks, SAVED_POSTS} from "../stores/bookmarks";
+import PubSub from 'pubsub-js';
 
 interface Props {
     posts: PostMetadata[];
@@ -22,6 +23,8 @@ interface State {
 }
 
 export class PostList extends React.Component<Props, State> {
+    private bookmarkSubscription: any;
+
     constructor(props: Props) {
         super(props);
 
@@ -37,21 +40,45 @@ export class PostList extends React.Component<Props, State> {
         this.setState({
             saved: saved
         });
+
+        this.bookmarkSubscription = PubSub.subscribe(SAVED_POSTS, this.handleSave);
+    }
+
+
+    componentWillUnmount(): void {
+        // if (this.bookmarkSubscription) {
+        //     PubSub.unsubscribe(this.bookmarkSubscription);
+        // }
     }
 
     savePost = (post: PostMetadata) => {
-        Bookmarks.savePost(post.id).then(posts => this.setState({saved: posts}));
+        Bookmarks.savePost(post.id);
         if (this.props.onLike) {
             this.props.onLike(post);
         }
     };
 
     unsavePost = (post: PostMetadata) => {
-        Bookmarks.removePost(post.id).then(posts => this.setState({saved: posts}));
+        // Bookmarks.removePost(post.id).then(posts => this.setState({saved: posts}));
+        Bookmarks.removePost(post.id);
 
         if (this.props.onUnlike) {
             this.props.onUnlike(post);
         }
+    };
+
+    handleSave = (msg: string, data: BookmarkMessage) => {
+        console.log(data);
+
+        this.setState(state => {
+            if (data.saved) {
+                return {saved: state.saved.concat(data.saved)};
+            }
+
+            if (data.removed) {
+                return {saved: state.saved.filter(p => p!= data.removed)};
+            }
+        })
     };
 
     render() {

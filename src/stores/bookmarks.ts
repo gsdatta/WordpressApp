@@ -1,8 +1,19 @@
 import {AsyncStorage} from "react-native";
+import PubSub from 'pubsub-js';
+
+export const SAVED_POSTS: string = 'SAVED_POSTS';
+
+export interface BookmarkMessage {
+    saved?: number;
+    removed?: number;
+}
 
 export class Bookmarks {
+
     static async removePost(postId: number): Promise<number[]> {
         let posts = await Bookmarks.getSavedPosts();
+        PubSub.publish(SAVED_POSTS, {removed: postId});
+
         return Bookmarks.savePosts(posts.filter(p => p !== postId));
     }
 
@@ -12,6 +23,7 @@ export class Bookmarks {
             return posts;
         }
 
+        PubSub.publish(SAVED_POSTS, {saved: postId});
         return Bookmarks.savePosts(posts.concat(postId));
     }
 

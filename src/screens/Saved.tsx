@@ -5,7 +5,8 @@ import {WP_SERVER} from "../config";
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
 import {PostMetadata} from "../stores/wordpress/models";
-import {Bookmarks} from "../stores/bookmarks";
+import {BookmarkMessage, Bookmarks, SAVED_POSTS} from "../stores/bookmarks";
+import PubSub from "pubsub-js";
 
 
 export interface InputProps {
@@ -22,12 +23,15 @@ interface State {
 }
 
 export class Saved extends React.Component<Props, State> {
+    private bookmarkSubscription: any;
+
     constructor(props: Props) {
         super(props);
 
         this.state = Saved._getDefaultState();
         this.goToPost = this.goToPost.bind(this);
         this.onRefresh = this.onRefresh.bind(this);
+        this.bookmarkSubscription = PubSub.subscribe(SAVED_POSTS, this.handleSave);
     }
 
     static _getDefaultState(): State {
@@ -40,6 +44,22 @@ export class Saved extends React.Component<Props, State> {
     async componentDidMount() {
        this.onRefresh();
     }
+
+    handleSave = (msg: string, data: BookmarkMessage) => {
+        console.log(data);
+        if (data.saved) {
+            this._getPostData([data.saved]);
+        }
+
+        if (data.removed) {
+            this.setState((state: State) => {
+                return {
+                    saved: state.saved.filter(p => p.id != data.removed)
+                }
+            });
+        }
+    };
+
 
     _getPostData(savedIds: number[]) {
         savedIds.forEach( id => {
