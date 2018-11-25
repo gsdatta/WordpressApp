@@ -1,6 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, Image, Linking, Platform, ScrollView, StyleSheet} from 'react-native';
-import {Button, Icon, Text, View} from 'native-base';
+import {Button, Icon, Text, Toast, View} from 'native-base';
 import {WP} from "../stores/wordpress";
 import {WP_SERVER} from "../config";
 import HTML from 'react-native-render-html';
@@ -133,7 +133,7 @@ export class SinglePost extends React.Component<InputProps, State> {
                                             }
                                         });
                                     }
-                                })
+                                }).catch(error => Toast.show({text: "Unable to load this post."}))
                             }}
                         />
                     </View>
