@@ -12,7 +12,7 @@ interface Props {
     onLike?: (post: PostMetadata) => void;
     onUnlike?: (post: PostMetadata) => void;
     showExcerpt: boolean;
-    onEndReached: () => void;
+    onEndReached: (page: number) => void;
     onRefresh: () => void;
     refreshing: boolean;
     footerLoading: boolean;
@@ -24,6 +24,7 @@ interface State {
 
 export class PostList extends React.Component<Props, State> {
     private bookmarkSubscription: any;
+    private page = 1;
 
     constructor(props: Props) {
         super(props);
@@ -99,13 +100,18 @@ export class PostList extends React.Component<Props, State> {
                             showExcerpt={this.props.showExcerpt}/>
                     );
                 }}
-                onEndReached={() => this.props.onEndReached()}
+                onEndReached={() => {
+                    if (!this.props.footerLoading) {
+                        this.page += 1;
+                        this.props.onEndReached(this.page);
+                    }
+                }}
                 refreshing={this.props.refreshing}
                 onRefresh={() => {
                     this.props.onRefresh();
                     Bookmarks.getSavedPosts().then(saved => this.setState({saved: saved}));
                 }}
-                keyExtractor={(post) => `${post.id}`}
+                keyExtractor={(post) => `post-${post.id}`}
                 ListFooterComponent={(
                         this.props.footerLoading ? (
                         <View style={{flex: 1}}>

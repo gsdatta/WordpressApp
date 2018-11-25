@@ -23,7 +23,6 @@ interface State {
     canLoadMore: boolean;
     saved: number[];
     refreshing: boolean;
-    page: number;
 }
 
 export class Posts extends React.Component<Props, State> {
@@ -42,7 +41,6 @@ export class Posts extends React.Component<Props, State> {
             canLoadMore: true,
             saved: [],
             refreshing: false,
-            page: 1
         };
     }
 
@@ -65,7 +63,7 @@ export class Posts extends React.Component<Props, State> {
         });
     }
 
-    _getPostData(categoryId?: number) {
+    _getPostData(categoryId?: number, page: number = 1) {
         let params = new PostSearchParams();
         console.log(`Loading list of posts for category [${categoryId}]`);
 
@@ -76,7 +74,7 @@ export class Posts extends React.Component<Props, State> {
             params.categoryId = categoryId;
         }
 
-        params.page = this.state.page;
+        params.page = page;
 
         return new WP(WP_SERVER).posts(params)
             .then(cat => {
@@ -85,12 +83,9 @@ export class Posts extends React.Component<Props, State> {
                 Array.prototype.push.apply(posts, cat);
                 console.log(cat);
 
-                let nextPage = this.state.page + 1;
-
                 this.setState({
                     posts: posts,
                     canLoadMore: cat.length !== 0,
-                    page: nextPage,
                     refreshing: false,
                     isLoadingMore: false
                 });
@@ -138,12 +133,12 @@ export class Posts extends React.Component<Props, State> {
             <PostList
                 posts={this.state.posts}
                 onPostPress={this.goToPost}
-                onEndReached={() => {
-                    if (!this.state.isLoadingMore && this.state.canLoadMore) {
+                onEndReached={(page) => {
+                    if (this.state.canLoadMore) {
                         this.setState({
                             isLoadingMore: true
                         });
-                        this._getPostData(this.state.categoryId);
+                        this._getPostData(this.state.categoryId, page);
                     }
                 }}
                 refreshing={this.state.refreshing}

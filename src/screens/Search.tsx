@@ -15,9 +15,12 @@ export interface Props {
 interface State {
     posts: PostMetadata[];
     refreshing: boolean;
+    loadingMore: boolean;
+    canLoadMore: boolean;
 }
 
 export class Search extends React.Component<Props, State> {
+    private searchString = "";
 
     constructor(props: Props) {
         super(props);
@@ -30,6 +33,8 @@ export class Search extends React.Component<Props, State> {
         return {
             posts: [],
             refreshing: true,
+            loadingMore: false,
+            canLoadMore: true
         };
     }
 
@@ -56,15 +61,26 @@ export class Search extends React.Component<Props, State> {
     };
 
     onSubmit = (query: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
-        let params = new PostSearchParams();
-        params.search = query.nativeEvent.text;
-
-        new WP(WP_SERVER).posts(params).then((posts) => {
-            this.setState({
-                posts: posts
-            });
-        });
+        this.searchString = query.nativeEvent.text;
+        this._getData(this.searchString)
     };
+
+    async _getData(searchQuery: string, page: number = 1) {
+        new WP(WP_SERVER).search(searchQuery, page).then((newPosts) => {
+            this.setState((prevState) => {
+                return {
+                    posts: prevState.posts.concat(newPosts),
+                    loadingMore: false
+                }
+            });
+        }).catch((error) => {
+            this.setState({
+                canLoadMore: false,
+                loadingMore: false
+            })
+        });
+
+    }
 
     render() {
         return (
@@ -82,10 +98,17 @@ export class Search extends React.Component<Props, State> {
                     <PostList
                         posts={this.state.posts}
                         onPostPress={this.goToPost}
-                        onEndReached={() => { }}
+                        onEndReached={(page) => {
+                            if(this.state.canLoadMore) {
+                                this.setState({
+                                    loadingMore: true
+                                });
+                                this._getData(this.searchString, page)
+                            }
+                        }}
                         refreshing={false}
                         onRefresh={() => {}}
-                        footerLoading={false}
+                        footerLoading={this.state.loadingMore}
                         showExcerpt={false}
                     />
                     : <Text style={{textAlign: 'center', color: 'grey', 'paddingTop': 20}}>No results. Try another search.</Text>

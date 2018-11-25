@@ -11,9 +11,9 @@ export class Category {
 }
 
 export class PostSearchParams {
-    categoryId: number | undefined;
+    categoryId?: number;
     search?: string;
-    page: number = 1;
+    page?: number = 1;
 }
 
 export class PostMetadata {
