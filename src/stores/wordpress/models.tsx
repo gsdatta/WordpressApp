@@ -14,6 +14,7 @@ export class PostSearchParams {
     categoryId?: number;
     search?: string;
     page?: number = 1;
+    slug?: string;
 }
 
 export class PostMetadata {

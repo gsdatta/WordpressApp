@@ -1,5 +1,6 @@
 import {Category, PostMetadata, PostSearchParams} from './models';
 import URLSearchParams from 'url-search-params';
+import URL from 'url-parse';
 
 export class WP {
     private readonly url: string;
@@ -38,6 +39,26 @@ export class WP {
             .then(this._mapJsonToPost);
     }
 
+    async getPostFromURL(postUrl: string): Promise<PostMetadata | undefined> {
+        let u = new URL(postUrl).pathname;
+        let pathPieces = (u[u.length - 1] == '/' ? u.substring(0, u.length - 1) : u).split('/');
+        let slug = pathPieces[pathPieces.length - 1];
+
+        let urlParams = new PostSearchParams();
+        urlParams.slug = slug;
+
+        try {
+            let posts = await this._getPosts(urlParams);
+            if (posts.length == 1) {
+                return posts[0];
+            } else {
+                return undefined;
+            }
+        } catch (error) {
+            return undefined;
+        }
+    }
+
     async _getPosts(params: PostSearchParams): Promise<PostMetadata[]> {
         let url = `${this.url}/posts`;
         if (params) {
@@ -53,6 +74,10 @@ export class WP {
 
             if (params.search) {
                 urlParams.append('search', params.search);
+            }
+
+            if (params.slug) {
+                urlParams.append('slug', params.slug);
             }
 
             const queryString = urlParams.toString();

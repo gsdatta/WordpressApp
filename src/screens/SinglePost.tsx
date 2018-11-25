@@ -112,7 +112,30 @@ export class SinglePost extends React.Component<InputProps, State> {
                             <Icon type='FontAwesome' name='youtube-play'/>
                         </Button>
 
-                        <HTML html={post.post_content != null ? post.post_content : ''}/>
+                        <HTML
+                            html={post.post_content != null ? post.post_content : ''}
+                            onLinkPress={(event, href) => {
+                                new WP(WP_SERVER).getPostFromURL(href).then(post => {
+                                    if (post) {
+                                        Navigation.push(this.props.componentId, {
+                                            component: {
+                                                name: 'posts.Single',
+                                                passProps: {
+                                                    postId: post.id
+                                                },
+                                                options: {
+                                                    topBar: {
+                                                        backButton: {
+                                                            title: 'Back'
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                })
+                            }}
+                        />
                     </View>
                 </ScrollView>
             );
