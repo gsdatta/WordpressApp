@@ -1,7 +1,5 @@
 import React from 'react';
-import {AsyncStorage} from 'react-native';
 import {WP} from "../stores/wordpress";
-import {WP_SERVER} from "../config";
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
 import {PostMetadata} from "../stores/wordpress/models";
@@ -64,7 +62,7 @@ export class Saved extends React.Component<Props, State> {
     _getPostData(savedIds: number[]) {
         savedIds.forEach( id => {
             console.log(id);
-            new WP(WP_SERVER).post(Number(id))
+            new WP().post(Number(id))
                 .then(post => {
                     console.log(post);
                     this.setState((prevState: State) => {

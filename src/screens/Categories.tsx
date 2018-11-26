@@ -2,7 +2,6 @@ import React from 'react';
 import {ScrollView} from 'react-native';
 import {Body, Icon, List, ListItem, Right, Text} from 'native-base';
 import {Layout, Navigation} from 'react-native-navigation';
-import {WP_SERVER} from '../config';
 import {WP} from '../stores/wordpress'
 import {Category} from "../stores/wordpress/models";
 import {InputProps as PostProps} from "./Posts";
@@ -30,7 +29,7 @@ export class Categories extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        new WP(WP_SERVER).categories().then(cat => {
+        new WP().categories().then(cat => {
             console.log(cat);
             return cat;
         }).then(cat => this.setState({categories: cat}));

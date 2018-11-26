@@ -1,14 +1,14 @@
 import React from 'react';
 import {ActivityIndicator, Image, Linking, Platform, ScrollView, StyleSheet} from 'react-native';
-import {Button, Icon, Text, Toast, View} from 'native-base';
+import {Button, Container, Icon, Text, Toast, View} from 'native-base';
 import {WP} from "../stores/wordpress";
-import {WP_SERVER} from "../config";
 import HTML from 'react-native-render-html';
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import {Navigation, Options} from 'react-native-navigation';
 import Share from 'react-native-share';
 import {ImageSource} from "react-native-vector-icons/Icon";
 import {PostMetadata} from "../stores/wordpress/models";
+import {Loading} from "../components/Loading";
 
 export interface InputProps {
     postId: number;
@@ -67,7 +67,7 @@ export class SinglePost extends React.Component<InputProps, State> {
     async _getPostData(postId: number) {
         console.log(`Fetching post ${postId}`);
         try {
-            let post = await new WP(WP_SERVER).post(postId);
+            let post = await new WP().post(postId);
             this.setState({
                 post: post
             });
@@ -80,19 +80,13 @@ export class SinglePost extends React.Component<InputProps, State> {
 
     render() {
         if (this.state.isLoading || this.state.post === null) {
-            return (
-                <View style={styles.container}>
-                    <Text style={{textAlign: 'center', marginBottom: 10}}>Loading post...</Text>
-                    <ActivityIndicator size="large" color="#0000ff"/>
-                </View>
-            )
+            return (<Loading />)
         } else {
             let post = this.state.post;
 
             return (
                 <ScrollView contentContainerStyle={styles.container} style={{flex: 1, flexDirection: 'column'}}>
                     <View>
-
                         <Image style={styles.image}
                                source={{
                                    uri: post.media_url,
@@ -115,7 +109,7 @@ export class SinglePost extends React.Component<InputProps, State> {
                         <HTML
                             html={post.post_content != null ? post.post_content : ''}
                             onLinkPress={(event, href) => {
-                                new WP(WP_SERVER).getPostFromURL(href).then(post => {
+                                new WP().getPostFromURL(href).then(post => {
                                     if (post) {
                                         Navigation.push(this.props.componentId, {
                                             component: {
@@ -142,6 +136,14 @@ export class SinglePost extends React.Component<InputProps, State> {
         }
     }
 }
+
+const loading = StyleSheet.create({
+    container: {
+        justifyContent: 'center',
+        flex: 1,
+        flexDirection: 'column'
+    }
+});
 
 const styles = StyleSheet.create({
     container: {

@@ -1,11 +1,10 @@
 import React from 'react';
 import {AsyncStorage} from 'react-native';
 import {WP} from "../stores/wordpress";
-import {WP_SERVER} from "../config";
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
 import {PostMetadata, PostSearchParams} from "../stores/wordpress/models";
-import {Bookmarks} from "../stores/bookmarks";
+import {Loading} from "../components/Loading";
 
 
 export interface InputProps {
@@ -76,7 +75,7 @@ export class Posts extends React.Component<Props, State> {
 
         params.page = page;
 
-        return new WP(WP_SERVER).posts(params)
+        return new WP().posts(params)
             .then(cat => {
                 let posts = this.state.posts;
 
@@ -129,6 +128,10 @@ export class Posts extends React.Component<Props, State> {
     };
 
     render() {
+        if (this.state.posts.length == 0) {
+            return (<Loading />);
+        }
+
         return (
             <PostList
                 posts={this.state.posts}

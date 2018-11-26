@@ -1,10 +1,9 @@
 import React from 'react';
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
-import {PostMetadata, PostSearchParams} from "../stores/wordpress/models";
+import {PostMetadata} from "../stores/wordpress/models";
 import {Container, Header, Icon, Input, Item, Text} from "native-base";
 import {WP} from "../stores/wordpress";
-import {WP_SERVER} from "../config";
 import {NativeSyntheticEvent, TextInputSubmitEditingEventData} from "react-native";
 
 
@@ -66,10 +65,10 @@ export class Search extends React.Component<Props, State> {
     };
 
     async _getData(searchQuery: string, page: number = 1) {
-        new WP(WP_SERVER).search(searchQuery, page).then((newPosts) => {
+        new WP().search(searchQuery, page).then((newPosts) => {
             this.setState((prevState) => {
                 return {
-                    posts: prevState.posts.concat(newPosts),
+                    posts: page == 1 ? newPosts : prevState.posts.concat(newPosts),
                     loadingMore: false
                 }
             });

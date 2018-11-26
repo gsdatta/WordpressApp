@@ -1,12 +1,13 @@
 import {Category, PostMetadata, PostSearchParams} from './models';
 import URLSearchParams from 'url-search-params';
 import URL from 'url-parse';
+import {WP_SERVER} from "../../config";
 
 export class WP {
     private readonly url: string;
 
-    constructor(url: string) {
-        this.url = url;
+    constructor() {
+        this.url = WP_SERVER;
     }
 
     getURL(url: string): Promise<Response> {

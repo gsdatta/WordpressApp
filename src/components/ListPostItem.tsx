@@ -3,7 +3,7 @@ import {Body, Card, CardItem, Col, Grid, Text} from 'native-base';
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import HTML from "react-native-render-html";
-import {Category, PostMetadata} from "../stores/wordpress/models";
+import {PostMetadata} from "../stores/wordpress/models";
 
 interface Props {
     post: PostMetadata;
