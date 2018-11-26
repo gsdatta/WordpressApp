@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import HTML from "react-native-render-html";
 import {PostMetadata} from "../stores/wordpress/models";
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 interface Props {
     post: PostMetadata;
@@ -48,6 +49,7 @@ export class ListPostItem extends React.Component<Props> {
                                 <Col size={20}>
                                     <TouchableOpacity
                                         onPress={() => {
+                                            ReactNativeHapticFeedback.trigger('impactLight', true);
                                             if (isLiked(post)) {
                                                 this.props.onUnlike(post);
                                             } else {

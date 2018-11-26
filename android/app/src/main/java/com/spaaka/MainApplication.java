@@ -36,6 +36,11 @@ public class MainApplication extends NavigationApplication {
         // No need to add RnnPackage and MainReactPackage
         return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
+            new RNReactNativeHapticFeedbackPackage(),
+            new PhotoViewPackage(),
+            new RNSharePackage(),
+            new LinearGradientPackage(),
+            new VectorIconsPackage(),
                 new VectorIconsPackage(),
                 new RNSharePackage()
         );
