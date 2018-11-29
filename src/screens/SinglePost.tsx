@@ -71,7 +71,8 @@ export class SinglePost extends React.Component<InputProps, State> {
         try {
             let post = await new WP().post(postId);
             this.setState({
-                post: post
+                post: post,
+                error: false
             });
         } catch (err) {
             console.log(err);
@@ -85,7 +86,7 @@ export class SinglePost extends React.Component<InputProps, State> {
         if (this.state.isLoading && this.state.post === null) {
             return (<Loading message={"Loading post..."}/>)
         } else if (this.state.error || this.state.post === null) {
-            return (<UnableToLoad />)
+            return (<UnableToLoad onRefresh={() => this._getPostData(this.props.postId)}/>)
         } else {
             let post = this.state.post;
 
@@ -113,6 +114,7 @@ export class SinglePost extends React.Component<InputProps, State> {
 
                         <HTML
                             html={post.post_content != null ? post.post_content : ''}
+                            allowedStyles={[]}
                             onLinkPress={(event, href) => {
                                 new WP().getPostFromURL(href).then(post => {
                                     if (post) {
