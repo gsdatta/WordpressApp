@@ -1,6 +1,6 @@
 import React from 'react';
-import {ActivityIndicator, Image, Linking, Platform, ScrollView, StyleSheet} from 'react-native';
-import {Button, Container, Icon, Text, Toast, View} from 'native-base';
+import {Image, Linking, Platform, ScrollView, StyleSheet} from 'react-native';
+import {Button, Icon, Text, Toast, View} from 'native-base';
 import {WP} from "../stores/wordpress";
 import HTML from 'react-native-render-html';
 import EvilIcons from "react-native-vector-icons/EvilIcons";
@@ -20,6 +20,8 @@ interface State {
     post: PostMetadata | null;
     error: boolean;
 }
+
+const CATEGORY_REGEX = RegExp("swayampaaka.com\/category");
 
 export class SinglePost extends React.Component<InputProps, State> {
 
@@ -116,25 +118,49 @@ export class SinglePost extends React.Component<InputProps, State> {
                             html={post.post_content != null ? post.post_content : ''}
                             allowedStyles={[]}
                             onLinkPress={(event, href) => {
-                                new WP().getPostFromURL(href).then(post => {
-                                    if (post) {
-                                        Navigation.push(this.props.componentId, {
-                                            component: {
-                                                name: 'posts.Single',
-                                                passProps: {
-                                                    postId: post.id
-                                                },
-                                                options: {
-                                                    topBar: {
-                                                        backButton: {
-                                                            title: 'Back'
+                                if (CATEGORY_REGEX.test(href)) {
+                                    new WP()._getCategoryIdBySlug(href).then(category => {
+                                            if (category) {
+                                                Navigation.push(this.props.componentId, {
+                                                    component: {
+                                                        name: 'posts.List',
+                                                        passProps: {
+                                                            categoryId: category.id
+                                                        },
+                                                        options: {
+                                                            topBar: {
+                                                                backButton: {
+                                                                    title: 'Back'
+                                                                }
+                                                            }
                                                         }
                                                     }
-                                                }
+                                                });
                                             }
-                                        });
-                                    }
-                                }).catch(error => Toast.show({text: "Unable to load this post."}))
+                                        }
+                                    ).catch(error => Toast.show({text: "Unable to load this post."}))
+                                } else {
+                                    new WP().getPostFromURL(href).then(post => {
+                                            if (post) {
+                                                Navigation.push(this.props.componentId, {
+                                                    component: {
+                                                        name: 'posts.Single',
+                                                        passProps: {
+                                                            postId: post.id
+                                                        },
+                                                        options: {
+                                                            topBar: {
+                                                                backButton: {
+                                                                    title: 'Back'
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    ).catch(error => Toast.show({text: "Unable to load this post."}))
+                                }
                             }}
                         />
                     </View>

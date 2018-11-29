@@ -21,7 +21,7 @@ export class WP {
                 return res;
             })
             .then(res => res.json())
-            .then((json: any) => json.map((c: any) => new Category(c.id, c.name, c.count)));
+            .then((json: any[]) => json.map(this._mapJsonToCategory));
     }
 
     async search(query: string, page: number = 1): Promise<PostMetadata[]> {
@@ -41,12 +41,8 @@ export class WP {
     }
 
     async getPostFromURL(postUrl: string): Promise<PostMetadata | undefined> {
-        let u = new URL(postUrl).pathname;
-        let pathPieces = (u[u.length - 1] == '/' ? u.substring(0, u.length - 1) : u).split('/');
-        let slug = pathPieces[pathPieces.length - 1];
-
         let urlParams = new PostSearchParams();
-        urlParams.slug = slug;
+        urlParams.slug = this._getSlug(postUrl);
 
         try {
             let posts = await this._getPosts(urlParams);
@@ -58,6 +54,37 @@ export class WP {
         } catch (error) {
             return undefined;
         }
+    }
+
+    async _getCategoryIdBySlug(categoryUrl: string) {
+        let url = `${this.url}/categories`;
+        let urlParams = new URLSearchParams();
+
+        urlParams.append('slug', this._getSlug(categoryUrl));
+        const queryString = urlParams.toString();
+        url += `?${queryString}`;
+
+        console.log(url);
+
+        try {
+            let data = await this.getURL(url);
+            let json = await data.json();
+            let categories = json.map(this._mapJsonToCategory);
+
+            if (categories.length == 1) {
+                return categories[0];
+            } else {
+                return undefined;
+            }
+        } catch (error) {
+            return undefined;
+        }
+    }
+
+    _getSlug(url: string) {
+        let u = new URL(url).pathname;
+        let pathPieces = (u[u.length - 1] == '/' ? u.substring(0, u.length - 1) : u).split('/');
+        return pathPieces[pathPieces.length - 1];
     }
 
     async _getPosts(params: PostSearchParams): Promise<PostMetadata[]> {
@@ -95,4 +122,6 @@ export class WP {
     _mapJsonToPost(p: any): PostMetadata {
         return new PostMetadata(p.id, p.title.rendered, p.featured_media, p.featured_image_src.replace("http:", "https:"), new Date(p.date), p.link, p.featured_video, p.excerpt.rendered, p.content.rendered);
     }
+
+    _mapJsonToCategory(json: any): Category {return new Category(json.id, json.name, json.count)}
 }
