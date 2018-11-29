@@ -2,6 +2,7 @@ import React from 'react';
 import {Body, Card, CardItem, Col, Grid, Text} from 'native-base';
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {Navigation} from 'react-native-navigation';
 import HTML from "react-native-render-html";
 import {PostMetadata} from "../stores/wordpress/models";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
@@ -9,6 +10,7 @@ import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 interface Props {
     post: PostMetadata;
     onPress: (post: PostMetadata) => void;
+    onPressIn?: (post: PostMetadata) => ((reactTag?: any) => void);
     onLike: (post: PostMetadata) => void;
     onUnlike: (post: PostMetadata) => void;
     isLiked: (post: PostMetadata) => boolean;
@@ -29,16 +31,21 @@ export class ListPostItem extends React.Component<Props> {
 
         return (
             <Card>
-                <TouchableOpacity
+                <Navigation.TouchablePreview
                     onPress={() => onPress(post)}
+                    onPressIn={(reactTag: any) => {
+                        if (this.props.onPressIn) {
+                            this.props.onPressIn(post)(reactTag);
+                        }
+                    }}
                     activeOpacity={0.7}>
-                    <CardItem>                        
+                    <CardItem>
                         <Image style={styles.image}
-                           source={{
-                               uri: post.media_url,
-                               headers: {'User-Agent': 'Mozilla/5.0'}
-                           }}/>
-                        
+                               source={{
+                                   uri: post.media_url,
+                                   headers: {'User-Agent': 'Mozilla/5.0'}
+                               }}/>
+
                         <Body style={{marginLeft: 20}}>
                             <Text>{post.name}</Text>
                             {showExcerpt ? (<HTML html={post.excerpt ? post.excerpt : ''}/>) : null }
@@ -66,7 +73,7 @@ export class ListPostItem extends React.Component<Props> {
                             </Grid>
                         </Body>
                     </CardItem>
-                </TouchableOpacity>
+                </Navigation.TouchablePreview>
             </Card>
         );
     }

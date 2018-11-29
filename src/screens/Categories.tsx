@@ -64,14 +64,16 @@ export class Categories extends React.Component<Props, State> {
             <ScrollView>
                 <List dataArray={categories} renderRow={(category) => {
                     return (
-                        <ListItem key={category.id} onPress={() => this.goToPostList(category)} icon>
-                            <Body>
-                            <Text>{category.name}</Text>
-                            </Body>
-                            <Right>
-                                <Text>{category.count}</Text>
-                                <Icon active name="arrow-forward"/>
-                            </Right>
+                        <ListItem key={category.id}  icon>
+                            <Navigation.TouchablePreview onPress={() => this.goToPostList(category)}>
+                                <Body>
+                                <Text>{category.name}</Text>
+                                </Body>
+                                <Right>
+                                    <Text>{category.count}</Text>
+                                    <Icon active name="arrow-forward"/>
+                                </Right>
+                            </Navigation.TouchablePreview>
                         </ListItem>
                     );
                 }}>

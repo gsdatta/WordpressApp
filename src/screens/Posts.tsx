@@ -1,10 +1,11 @@
 import React from 'react';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, GestureResponderEvent} from 'react-native';
 import {WP} from "../stores/wordpress";
 import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
 import {PostMetadata, PostSearchParams} from "../stores/wordpress/models";
 import {Loading} from "../components/Loading";
+import {navigateToPost, showPostPreview} from "../stores/navigator";
 
 
 export interface InputProps {
@@ -29,7 +30,6 @@ export class Posts extends React.Component<Props, State> {
         super(props);
 
         this.state = Posts._getDefaultState();
-        this.goToPost = this.goToPost.bind(this);
     }
 
     static _getDefaultState(): State {
@@ -114,19 +114,6 @@ export class Posts extends React.Component<Props, State> {
         }));
     };
 
-    goToPost = (post: PostMetadata) => {
-        console.log(`ComponentId: ${this.props.componentId}`);
-        console.log(`Loading post [${post.id}]`);
-        Navigation.push(this.props.componentId, {
-            component: {
-                name: 'posts.Single',
-                passProps: {
-                    postId: post.id
-                }
-            }
-        });
-    };
-
     render() {
         if (this.state.posts.length == 0) {
             return (<Loading />);
@@ -135,7 +122,8 @@ export class Posts extends React.Component<Props, State> {
         return (
             <PostList
                 posts={this.state.posts}
-                onPostPress={this.goToPost}
+                onPostPress={post => navigateToPost(this.props.componentId, post)}
+                onPostPressIn={post => showPostPreview(this.props.componentId, post)}
                 onEndReached={(page) => {
                     if (this.state.canLoadMore) {
                         this.setState({

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, StyleSheet} from 'react-native';
+import {ActivityIndicator, FlatList, GestureResponderEvent, StyleSheet} from 'react-native';
 import {View} from 'native-base';
 import {ListPostItem} from './ListPostItem';
 import {PostMetadata} from "../stores/wordpress/models";
@@ -9,6 +9,7 @@ import PubSub from 'pubsub-js';
 interface Props {
     posts: PostMetadata[];
     onPostPress: (post: PostMetadata) => void;
+    onPostPressIn?: (post: PostMetadata) => ((reactTag?: any) => void) ;
     onLike?: (post: PostMetadata) => void;
     onUnlike?: (post: PostMetadata) => void;
     showExcerpt: boolean;
@@ -94,6 +95,7 @@ export class PostList extends React.Component<Props, State> {
                         <ListPostItem
                             post={item}
                             onPress={(post) => this.props.onPostPress(post)}
+                            onPressIn={this.props.onPostPressIn}
                             onLike={this.savePost}
                             onUnlike={this.unsavePost}
                             isLiked={(post) => this.state.saved.includes(post.id)}

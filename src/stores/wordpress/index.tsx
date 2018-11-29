@@ -32,7 +32,7 @@ export class WP {
        return this._getPosts(params);
     }
 
-    post(id: number): Promise<PostMetadata> {
+    async post(id: number): Promise<PostMetadata> {
         let url = `${this.url}/posts/${id}`;
 
         return this.getURL(url)
