@@ -1,10 +1,11 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
+import {FlatList, ScrollView} from 'react-native';
 import {Body, Icon, List, ListItem, Right, Text} from 'native-base';
 import {Layout, Navigation} from 'react-native-navigation';
 import {WP} from '../stores/wordpress'
 import {Category} from "../stores/wordpress/models";
 import {InputProps as PostProps} from "./Posts";
+import {navigateToCategoryPostList, navigateToPost} from "../stores/navigator";
 
 export interface Props {
     componentId: string;
@@ -62,10 +63,13 @@ export class Categories extends React.Component<Props, State> {
 
         return (
             <ScrollView>
-                <List dataArray={categories} renderRow={(category) => {
-                    return (
-                        <ListItem key={category.id}  icon>
-                            <Navigation.TouchablePreview onPress={() => this.goToPostList(category)}>
+                <FlatList
+                    data={categories}
+                    keyExtractor={(category) => `category-${category.id}`}
+                    renderItem={({item}) => {
+                        const category = item;
+                        return (
+                            <ListItem key={category.id} onPress={() => navigateToCategoryPostList(this.props.componentId, category)} icon>
                                 <Body>
                                 <Text>{category.name}</Text>
                                 </Body>
@@ -73,11 +77,10 @@ export class Categories extends React.Component<Props, State> {
                                     <Text>{category.count}</Text>
                                     <Icon active name="arrow-forward"/>
                                 </Right>
-                            </Navigation.TouchablePreview>
-                        </ListItem>
-                    );
-                }}>
-                </List>
+                            </ListItem>
+                        );
+                    }}>
+                </FlatList>
             </ScrollView>
         );
     }

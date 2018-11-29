@@ -5,6 +5,7 @@ import {PostMetadata} from "../stores/wordpress/models";
 import {Container, Header, Icon, Input, Item, Text} from "native-base";
 import {WP} from "../stores/wordpress";
 import {NativeSyntheticEvent, TextInputSubmitEditingEventData} from "react-native";
+import {navigateToPost, showPostPreview} from "../stores/navigator";
 
 
 export interface Props {
@@ -25,7 +26,6 @@ export class Search extends React.Component<Props, State> {
         super(props);
 
         this.state = Search._getDefaultState();
-        this.goToPost = this.goToPost.bind(this);
     }
 
     static _getDefaultState(): State {
@@ -45,19 +45,6 @@ export class Search extends React.Component<Props, State> {
             }
         );
     }
-
-    goToPost = (post: PostMetadata) => {
-        console.log(`ComponentId: ${this.props.componentId}`);
-        console.log(`Loading post [${post.id}]`);
-        Navigation.push(this.props.componentId, {
-            component: {
-                name: 'posts.Single',
-                passProps: {
-                    postId: post.id
-                }
-            }
-        });
-    };
 
     onSubmit = (query: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
         this.searchString = query.nativeEvent.text;
@@ -96,7 +83,8 @@ export class Search extends React.Component<Props, State> {
                 {this.state.posts.length > 0 ?
                     <PostList
                         posts={this.state.posts}
-                        onPostPress={this.goToPost}
+                        onPostPress={post => navigateToPost(this.props.componentId, post)}
+                        onPostPressIn={post => showPostPreview(this.props.componentId, post)}
                         onEndReached={(page) => {
                             if(this.state.canLoadMore) {
                                 this.setState({
@@ -111,7 +99,6 @@ export class Search extends React.Component<Props, State> {
                         showExcerpt={false}
                     />
                     : <Text style={{textAlign: 'center', color: 'grey', 'paddingTop': 20}}>No results. Try another search.</Text>
-
                 }
             </Container>
         );
