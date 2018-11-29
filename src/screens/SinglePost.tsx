@@ -8,7 +8,7 @@ import {Navigation, Options} from 'react-native-navigation';
 import Share from 'react-native-share';
 import {ImageSource} from "react-native-vector-icons/Icon";
 import {PostMetadata} from "../stores/wordpress/models";
-import {Loading} from "../components/Loading";
+import {Loading, UnableToLoad} from "../components/Loading";
 
 export interface InputProps {
     postId: number;
@@ -18,6 +18,7 @@ export interface InputProps {
 interface State {
     isLoading: boolean;
     post: PostMetadata | null;
+    error: boolean;
 }
 
 export class SinglePost extends React.Component<InputProps, State> {
@@ -28,7 +29,8 @@ export class SinglePost extends React.Component<InputProps, State> {
 
         this.state = {
             post: null,
-            isLoading: true
+            isLoading: true,
+            error: false
         };
     }
 
@@ -73,14 +75,17 @@ export class SinglePost extends React.Component<InputProps, State> {
             });
         } catch (err) {
             console.log(err);
+            this.setState({error: true, isLoading: false});
         }
 
         this.setState({isLoading: false});
     }
 
     render() {
-        if (this.state.isLoading || this.state.post === null) {
-            return (<Loading />)
+        if (this.state.isLoading && this.state.post === null) {
+            return (<Loading message={"Loading post..."}/>)
+        } else if (this.state.error || this.state.post === null) {
+            return (<UnableToLoad />)
         } else {
             let post = this.state.post;
 

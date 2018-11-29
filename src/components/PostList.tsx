@@ -5,6 +5,7 @@ import {ListPostItem} from './ListPostItem';
 import {PostMetadata} from "../stores/wordpress/models";
 import {BookmarkMessage, Bookmarks, SAVED_POSTS} from "../stores/bookmarks";
 import PubSub from 'pubsub-js';
+import {Loading, UnableToLoad} from "./Loading";
 
 interface Props {
     posts: PostMetadata[];
@@ -17,6 +18,8 @@ interface Props {
     onRefresh: () => void;
     refreshing: boolean;
     footerLoading: boolean;
+    isError?: boolean;
+    postsAreLoading?: boolean;
 }
 
 interface State {
@@ -29,8 +32,6 @@ export class PostList extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-
-        console.log("RENDERING");
 
         this.state = {
             saved: []
@@ -84,6 +85,11 @@ export class PostList extends React.Component<Props, State> {
     };
 
     render() {
+        if (this.props.isError) {
+            return (<UnableToLoad onRefresh={this.props.onRefresh}/>)
+        } else if (this.props.postsAreLoading) {
+            return (<Loading message={"Loading posts..."}/>)
+        }
         return (
             <FlatList
                 style={styles.list}
@@ -113,7 +119,7 @@ export class PostList extends React.Component<Props, State> {
                     this.props.onRefresh();
                     Bookmarks.getSavedPosts().then(saved => this.setState({saved: saved}));
                 }}
-                keyExtractor={(post) => `post-${post.id}`}
+                keyExtractor={(post, index) => `post-${index}-${post.id}`}
                 ListFooterComponent={(
                         this.props.footerLoading ? (
                         <View style={{flex: 1}}>

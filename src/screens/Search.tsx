@@ -15,8 +15,9 @@ export interface Props {
 interface State {
     posts: PostMetadata[];
     refreshing: boolean;
-    loadingMore: boolean;
+    footerLoadingMore: boolean;
     canLoadMore: boolean;
+    error: boolean;
 }
 
 export class Search extends React.Component<Props, State> {
@@ -32,8 +33,9 @@ export class Search extends React.Component<Props, State> {
         return {
             posts: [],
             refreshing: true,
-            loadingMore: false,
-            canLoadMore: true
+            footerLoadingMore: false,
+            canLoadMore: true,
+            error: false
         };
     }
 
@@ -52,17 +54,20 @@ export class Search extends React.Component<Props, State> {
     };
 
     async _getData(searchQuery: string, page: number = 1) {
+        console.log(page);
         new WP().search(searchQuery, page).then((newPosts) => {
             this.setState((prevState) => {
+                console.log(page);
                 return {
                     posts: page == 1 ? newPosts : prevState.posts.concat(newPosts),
-                    loadingMore: false
+                    footerLoadingMore: false
                 }
             });
         }).catch((error) => {
             this.setState({
                 canLoadMore: false,
-                loadingMore: false
+                footerLoadingMore: false,
+                error: page === 1
             })
         });
 
@@ -76,9 +81,6 @@ export class Search extends React.Component<Props, State> {
                         <Icon name="ios-search" />
                         <Input placeholder="Search" onSubmitEditing={this.onSubmit}/>
                     </Item>
-                    {/*<Button transparent>*/}
-                        {/*<Text>Search</Text>*/}
-                    {/*</Button>*/}
                 </Header>
                 {this.state.posts.length > 0 ?
                     <PostList
@@ -88,14 +90,14 @@ export class Search extends React.Component<Props, State> {
                         onEndReached={(page) => {
                             if(this.state.canLoadMore) {
                                 this.setState({
-                                    loadingMore: true
+                                    footerLoadingMore: true
                                 });
                                 this._getData(this.searchString, page)
                             }
                         }}
                         refreshing={false}
                         onRefresh={() => {}}
-                        footerLoading={this.state.loadingMore}
+                        footerLoading={this.state.footerLoadingMore}
                         showExcerpt={false}
                     />
                     : <Text style={{textAlign: 'center', color: 'grey', 'paddingTop': 20}}>No results. Try another search.</Text>

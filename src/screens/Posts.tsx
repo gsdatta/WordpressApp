@@ -1,11 +1,10 @@
 import React from 'react';
-import {AsyncStorage, GestureResponderEvent} from 'react-native';
+import {AsyncStorage} from 'react-native';
 import {WP} from "../stores/wordpress";
-import {Navigation} from 'react-native-navigation';
 import {PostList} from '../components';
 import {PostMetadata, PostSearchParams} from "../stores/wordpress/models";
-import {Loading} from "../components/Loading";
 import {navigateToPost, showPostPreview} from "../stores/navigator";
+import {Toast} from "native-base";
 
 
 export interface InputProps {
@@ -23,6 +22,7 @@ interface State {
     canLoadMore: boolean;
     saved: number[];
     refreshing: boolean;
+    error: boolean;
 }
 
 export class Posts extends React.Component<Props, State> {
@@ -40,6 +40,7 @@ export class Posts extends React.Component<Props, State> {
             canLoadMore: true,
             saved: [],
             refreshing: false,
+            error: false
         };
     }
 
@@ -77,48 +78,59 @@ export class Posts extends React.Component<Props, State> {
 
         return new WP().posts(params)
             .then(cat => {
-                let posts = this.state.posts;
-
-                Array.prototype.push.apply(posts, cat);
                 console.log(cat);
 
-                this.setState({
-                    posts: posts,
-                    canLoadMore: cat.length !== 0,
-                    refreshing: false,
-                    isLoadingMore: false
+                this.setState((prevState) => {
+                    return {
+                        posts: page === 1 ? cat : prevState.posts.concat(cat),
+                        canLoadMore: cat.length !== 0,
+                        refreshing: false,
+                        isLoadingMore: false,
+                        error: false
+                    }
                 });
             })
             .catch(err => {
                 console.log(err);
 
-                this.setState({
-                    isLoadingMore: false,
-                    refreshing: false,
-                    canLoadMore: false
+                this.setState(prevState => {
+                    return {
+                        isLoadingMore: false,
+                        refreshing: false,
+                        canLoadMore: false,
+                        error: page === 1 && prevState.posts.length === 0
+                    }
                 });
             });
     }
 
     _onRefresh = () => {
         this.setState({
-            refreshing: true
+            refreshing: true,
+            error: false
         });
 
-        this._getPostData(this.state.categoryId).then(() => {
+        this._getPostData(this.state.categoryId, 1).then(() => {
             this.setState({
                 refreshing: false
             });
-        }).catch((err) => this.setState({
-            refreshing: false
-        }));
+        }).catch((err) => {
+            console.log("Refreshing FAILED.");
+            this.setState({
+                refreshing: false
+            });
+
+            if (this.state.posts.length != 0) {
+                Toast.show({
+                    text: "Couldn't refresh posts.",
+                    buttonText: "Okay",
+                    duration: 3000
+                })
+            }
+        });
     };
 
     render() {
-        if (this.state.posts.length == 0) {
-            return (<Loading />);
-        }
-
         return (
             <PostList
                 posts={this.state.posts}
@@ -136,6 +148,8 @@ export class Posts extends React.Component<Props, State> {
                 onRefresh={this._onRefresh}
                 footerLoading={this.state.isLoadingMore}
                 showExcerpt={false}
+                postsAreLoading={this.state.posts.length == 0 && !this.state.error}
+                isError={this.state.error}
             />
         );
     }

@@ -5,6 +5,8 @@ import {PostMetadata} from "../stores/wordpress/models";
 import {BookmarkMessage, Bookmarks, SAVED_POSTS} from "../stores/bookmarks";
 import PubSub from "pubsub-js";
 import {navigateToPost, showPostPreview} from "../stores/navigator";
+import {DefaultContainer, TextMessages} from "../components/Loading";
+import {Text} from "native-base";
 
 
 export interface InputProps {
@@ -18,6 +20,8 @@ interface Props extends InputProps {
 interface State {
     saved: PostMetadata[];
     refreshing: boolean;
+    error: boolean;
+    loading: boolean;
 }
 
 export class Saved extends React.Component<Props, State> {
@@ -35,11 +39,13 @@ export class Saved extends React.Component<Props, State> {
         return {
             saved: [],
             refreshing: true,
+            error: false,
+            loading: true
         };
     }
 
     async componentDidMount() {
-       this._onRefresh();
+        this._onRefresh();
     }
 
     _handleSaveMessage = (msg: string, data: BookmarkMessage) => {
@@ -67,7 +73,7 @@ export class Saved extends React.Component<Props, State> {
 
     _getPostData = async (savedIds: number[]) => {
         const wp = new WP();
-        savedIds.forEach( async id => {
+        savedIds.forEach(async id => {
             console.log(id);
             try {
                 let post = await wp.post(Number(id));
@@ -86,13 +92,29 @@ export class Saved extends React.Component<Props, State> {
     };
 
     async _onRefresh() {
-        this.setState({saved: []});
-        let saved = await Bookmarks.getSavedPosts();
-        this._getPostData(saved);
+        this.setState(Saved._getDefaultState());
+        try {
+            let saved = await Bookmarks.getSavedPosts();
+            this.setState({
+                loading: false
+            });
+
+            this._getPostData(saved);
+        } catch (error) {
+            this.setState({
+                error: true,
+                loading: false
+            })
+        }
     }
 
 
     render() {
+        if (!this.state.loading && !this.state.error && this.state.saved.length == 0) {
+            return (
+                <TextMessages messages={["You haven't saved anything yet :(", "Check out some of our recipes first!"]} />
+            )
+        }
         return (
             <PostList
                 posts={this.state.saved}
@@ -105,6 +127,8 @@ export class Saved extends React.Component<Props, State> {
                 onRefresh={this._onRefresh}
                 footerLoading={false}
                 showExcerpt={false}
+                postsAreLoading={this.state.loading && !this.state.error}
+                isError={this.state.error}
             />
         );
     }
