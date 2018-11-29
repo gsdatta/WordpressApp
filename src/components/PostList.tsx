@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, GestureResponderEvent, StyleSheet} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet} from 'react-native';
 import {View} from 'native-base';
 import {ListPostItem} from './ListPostItem';
 import {PostMetadata} from "../stores/wordpress/models";

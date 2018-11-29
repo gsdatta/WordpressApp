@@ -5,7 +5,7 @@ import {Layout, Navigation} from 'react-native-navigation';
 import {WP} from '../stores/wordpress'
 import {Category} from "../stores/wordpress/models";
 import {InputProps as PostProps} from "./Posts";
-import {navigateToCategoryPostList, navigateToPost} from "../stores/navigator";
+import {navigateToCategoryPostList} from "../stores/navigator";
 
 export interface Props {
     componentId: string;

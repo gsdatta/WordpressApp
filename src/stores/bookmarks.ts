@@ -28,13 +28,27 @@ export class Bookmarks {
     }
 
     static async getSavedPosts(): Promise<number[]> {
-        let postString = await AsyncStorage.getItem('@Swayampaaka:saved_items');
+        try {
+            let postString = await AsyncStorage.getItem('@Swayampaaka:saved_items');
 
-        if (postString == null) {
+            if (postString == null) {
+                return [];
+            }
+
+            return JSON.parse(postString);
+        } catch (error) {
+            console.log(error);
             return [];
         }
+    }
 
-        return JSON.parse(postString);
+    static async isPostSaved(postId: number): Promise<boolean> {
+        try {
+            let posts = await Bookmarks.getSavedPosts();
+            return posts.includes(postId);
+        } catch (error) {
+            return false;
+        }
     }
 
     static async savePosts(posts: number[]): Promise<number[]> {

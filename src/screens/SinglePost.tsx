@@ -24,7 +24,6 @@ interface State {
 const CATEGORY_REGEX = RegExp("swayampaaka.com\/category");
 
 export class SinglePost extends React.Component<InputProps, State> {
-
     constructor(props: InputProps) {
         super(props);
         Navigation.events().bindComponent(this);
@@ -32,25 +31,42 @@ export class SinglePost extends React.Component<InputProps, State> {
         this.state = {
             post: null,
             isLoading: true,
-            error: false
+            error: false,
         };
     }
 
     async buttonOptions(): Promise<Options> {
         let shareIcon: ImageSource = await EvilIcons.getImageSource(`share-${Platform.OS === 'ios' ? 'apple' : 'google'}`, 30);
+
         return {
             topBar: {
-                rightButtons: [{
-                    id: 'shareButton',
-                    icon: shareIcon
-                }]
+                rightButtons: [
+                    {
+                        id: 'shareButton',
+                        icon: shareIcon
+                    },
+                    {
+                        id: 'saveButton',
+                        component: {
+                            name: 'post.Save',
+                            passProps: {
+                                postId: this.props.postId,
+                                color: 'red',
+                                size: 20
+                            }
+                        }
+                    }
+                ]
             }
         };
     }
 
     async componentDidMount() {
-        await this._getPostData(this.props.postId);
+        this._getPostData(this.props.postId);
+        this._setupTopBarButtons();
+    }
 
+    async _setupTopBarButtons() {
         let options = await this.buttonOptions();
         Navigation.mergeOptions(this.props.componentId, options);
     }
@@ -169,14 +185,6 @@ export class SinglePost extends React.Component<InputProps, State> {
         }
     }
 }
-
-const loading = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        flex: 1,
-        flexDirection: 'column'
-    }
-});
 
 const styles = StyleSheet.create({
     container: {

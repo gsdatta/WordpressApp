@@ -5,8 +5,7 @@ import {PostMetadata} from "../stores/wordpress/models";
 import {BookmarkMessage, Bookmarks, SAVED_POSTS} from "../stores/bookmarks";
 import PubSub from "pubsub-js";
 import {navigateToPost, showPostPreview} from "../stores/navigator";
-import {DefaultContainer, TextMessages} from "../components/Loading";
-import {Text} from "native-base";
+import {TextMessages} from "../components/Loading";
 
 
 export interface InputProps {
