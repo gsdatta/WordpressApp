@@ -147,6 +147,9 @@ export class SinglePost extends React.Component<InputProps, State> {
                                                             topBar: {
                                                                 backButton: {
                                                                     title: 'Back'
+                                                                },
+                                                                title: {
+                                                                    text: category.name
                                                                 }
                                                             }
                                                         }
