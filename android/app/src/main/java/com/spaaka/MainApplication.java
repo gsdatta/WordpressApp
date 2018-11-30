@@ -1,10 +1,12 @@
 package com.spaaka;
 
-import com.facebook.react.BuildConfig;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
+import com.mkuczera.RNReactNativeHapticFeedbackPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.reactnative.photoview.PhotoViewPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.reactnativenavigation.react.ReactGateway;
@@ -36,13 +38,11 @@ public class MainApplication extends NavigationApplication {
         // No need to add RnnPackage and MainReactPackage
         return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
-            new RNReactNativeHapticFeedbackPackage(),
-            new PhotoViewPackage(),
-            new RNSharePackage(),
-            new LinearGradientPackage(),
-            new VectorIconsPackage(),
-                new VectorIconsPackage(),
-                new RNSharePackage()
+                new RNReactNativeHapticFeedbackPackage(),
+                new PhotoViewPackage(),
+                new RNSharePackage(),
+                new LinearGradientPackage(),
+                new VectorIconsPackage()
         );
     }
 
